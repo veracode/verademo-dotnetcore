@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Blabber</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body role="document">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="header">
+                <ul class="nav nav-pills pull-right" id="menu">
+                    <li class="@Html.ActivePage("Account", "Reset")" role="presentation">@Html.ActionLink("Reset", "Index", "Reset")</li>
+                    <li class="@Html.ActivePage("Account", "Login")" role="presentation">@Html.ActionLink("Login", "Login", "Account")</li>
+                    <li class="@Html.ActivePage("Account", "Register")" role="presentation">@Html.ActionLink("Register", "Register", "Account")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Blabber</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

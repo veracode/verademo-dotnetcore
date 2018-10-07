@@ -1,0 +1,90 @@
+﻿@model VeraDemoNet.Models.RegisterViewModel
+
+@{
+    Layout = "../Shared/_LoginLayout.cshtml";
+    ViewBag.Title = "Register(2)";
+}
+
+<div class="page-header">
+    <h4>Register</h4>
+</div>
+<div></div>
+
+@{
+    if (!string.IsNullOrEmpty(Model.Error))
+    {
+<div class="alert alert-danger" role="alert">
+    @Model.Error
+</div>
+    }
+}
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Please provide your user information
+                    to register for Blab
+                </h3>
+            </div>
+            <div class="panel-body">
+                <form method="POST" action="registerfinish">
+                    <input type="hidden" name="returnPath" value="">
+                    <table class="table table-condensed">
+                        <tbody>
+                            <tr>
+                                <td>Username</td>
+                                <td>
+                                    <div class="form-group">
+                                        @Model.UserName
+                                        <input type="hidden" name="username" value="@Model.UserName"/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Password</td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control" name="password" value="">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Confirm Password</td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control" name="cpassword" value="">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Real Name</td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="realName" value="@Model.RealName">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Blab Name</td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="blabName" value="@Model.BlabName">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button type="submit" class="btn btn-primary" id="login" name="Register" value="Register">Register</button>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

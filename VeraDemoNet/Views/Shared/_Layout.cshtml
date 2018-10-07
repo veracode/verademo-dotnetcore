@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Blabber</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body role="document">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="header">
+                <ul class="nav nav-pills pull-right" id="menu">
+                    <li class="@Html.ActivePage("Blab", "Feed")" role="presentation">@Html.ActionLink("Feed", "Feed", "Blab")</li>
+                    <li class="@Html.ActivePage("Blab", "Blabbers")" role="presentation">@Html.ActionLink("Blabbers", "Blabbers", "Blab")</li>
+                    <li class="@Html.ActivePage("Account", "Profile")" role="presentation">@Html.ActionLink("Profile", "Profile", "Account")</li>
+                    <li class="@Html.ActivePage("Tools", "Tools")" role="presentation">@Html.ActionLink("Tools", "Index", "Tools")</li>
+                    <li class="@Html.ActivePage("Account", "LogOut")" role="presentation">@Html.ActionLink("Logout", "LogOut", "Account")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Blabber</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
