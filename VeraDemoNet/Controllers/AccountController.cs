@@ -29,19 +29,19 @@ namespace VeraDemoNet.Controllers
             logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);    
         }
 
-        [HttpGet]  
-        public ActionResult Login(string ReturnUrl = "")
+        [HttpGet, ActionName("Login")]  
+        public ActionResult GetLogin(string ReturnUrl = "")
         {  
             if (User.Identity.IsAuthenticated)  
             {  
-                return LogOut();  
+                return GetLogOut();  
             }  
             ViewBag.ReturnUrl = ReturnUrl;  
             return View();  
         }  
   
-        [HttpPost]  
-        public ActionResult Login(LoginView loginViewModel, string ReturnUrl = "")  
+        [HttpPost, ActionName("Login")]  
+        public ActionResult PostLogin(LoginView loginViewModel, string ReturnUrl = "")  
         {  
             if (ModelState.IsValid)  
             {  
@@ -83,7 +83,14 @@ namespace VeraDemoNet.Controllers
             return View(loginViewModel);  
         }  
  
-        public ActionResult LogOut()
+        [HttpGet, ActionName("Logout")]
+        public ActionResult GetLogOut()
+        {
+            InvalidateSession();
+            return Redirect(Url.Action("Login", "Account"));
+        }
+
+        private void InvalidateSession()
         {
             var cookie = new HttpCookie("Cookie1", "")
             {
@@ -92,8 +99,7 @@ namespace VeraDemoNet.Controllers
 
             Response.Cookies.Add(cookie);  
   
-            FormsAuthentication.SignOut();  
-            return RedirectToAction("Login", "Account", null);  
+            FormsAuthentication.SignOut();
         }
 
         [CustomAuthorize]
@@ -193,16 +199,16 @@ namespace VeraDemoNet.Controllers
 
             Response.StatusCode = (int)HttpStatusCode.OK;
             var msg = "Successfully changed values!\\\\nusername: {0}\\\\nReal Name: {1}\\\\nBlab Name: {2}";
-            
-            // Don't forget to escape braces so they're not included in teh string.Format
-            var respTemplate = "{{\"values\": {{\"username\": \"{0}\", \"realName\": \"{1}\", \"blabName\": \"{2}\"}}, \"message\": \"<script>alert('"+ msg + "');</script>\"}}";
-            
+
             // TODO: Log user out if the username has changed.
             if (User.Identity.Name != userName)
             {
-                return RedirectToAction("LogOut");
+                InvalidateSession();
+                return Content("{\"loggedout\":\"true\"}", "application/json");
             }
 
+            // Don't forget to escape braces so they're not included in the string.Format
+            var respTemplate = "{{\"values\": {{\"username\": \"{0}\", \"realName\": \"{1}\", \"blabName\": \"{2}\"}}, \"message\": \"<script>alert('"+ msg + "');</script>\"}}";
             return Content(string.Format(respTemplate, userName.ToLower(), realName, blabName), "application/json");
         }
 
@@ -225,6 +231,11 @@ namespace VeraDemoNet.Controllers
                     if (match == null)
                     {
                         return Content("No password found for " + userName);
+                    }
+
+                    if (match.PasswordHint == null)
+                    {
+                        return Content("Username '" + userName + "' has no password hint!");
                     }
 
                     var formatString = "Username '" + userName + "' has password: {0}";

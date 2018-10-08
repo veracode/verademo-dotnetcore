@@ -63,7 +63,7 @@
                                     &nbsp;@(blabber.NumberListening)&nbsp;
                                 </td>
                                 <td>
-                                    <form class="form-inline" role="form" method="POST" action="blabbers">
+                                    <form class="form-inline" role="form" method="POST" action="@Url.Action("Blabbers", "Blab")">
                                         <input type="hidden" name="blabberUsername" value="@blabber.UserName"/>
                                         <input type="hidden" name="command" value="@(blabber.Subscribed ? "ignore" : "listen")"/>
                                         <input type="submit" class="btn btn-default pull-right" name="button" value="@(blabber.Subscribed ? "Ignore" : "Listen")"/>

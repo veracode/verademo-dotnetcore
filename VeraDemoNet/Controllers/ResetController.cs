@@ -52,7 +52,7 @@ namespace VeraDemoNet.Controllers
         }
 
         [HttpGet]
-        [ActionName("Index")]
+        [ActionName("Reset")]
         public ActionResult GetReset()
         {
             logger.Info("Entering showReset");
@@ -61,7 +61,7 @@ namespace VeraDemoNet.Controllers
         }
 
         [HttpPost]
-        [ActionName("Index")]
+        [ActionName("Reset")]
         public ActionResult PostReset(string confirm, string primary)
         {
             logger.Info("Entering processReset");

@@ -26,7 +26,7 @@
                 <label>Your Profile</label>
             </div>
             <div class="actionBox">
-                <form method="post" action="profile" id="updateprofile" enctype="multipart/form-data">
+                <form method="post" action="@Url.Action("Profile", "Account") " id="updateprofile" enctype="multipart/form-data">
                     <input type="hidden" name="returnPath" value="">
                     <table class="table table-condensed">
                         <tbody>
@@ -175,7 +175,9 @@
                 success: function(data) {
                     console.log("Profile updated");
                     if (data) {
-                        if ('values' in data) {
+                        if ('loggedout' in data) {
+                            location.href = "@Url.Action("Login", "Account")";
+                        } else if ('values' in data) {
                             $.each(data.values,
                                 function(key, val) {
                                     $('input[name="' + key + '"]').val(val);
@@ -194,7 +196,7 @@
                     if (err.responseJSON && 'message' in err.responseJSON) {
                         $('body').append(err.responseJSON.message);
                     }
-                },
+                }
             });
         });
     </script>

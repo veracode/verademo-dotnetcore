@@ -19,7 +19,7 @@ namespace VeraDemoNet.Controllers
         }
 
         [CustomAuthorize]
-        [HttpGet, ActionName("Index")]
+        [HttpGet, ActionName("Tools")]
         public ActionResult GetTools()
         {
             return View(new ToolViewModel());
@@ -33,7 +33,7 @@ namespace VeraDemoNet.Controllers
 
             if (string.IsNullOrEmpty(host))
             {
-                return View("Index", viewModel);
+                return View("Tools", viewModel);
             }
 
             var output = new StringBuilder();
@@ -61,7 +61,7 @@ namespace VeraDemoNet.Controllers
             viewModel.Host = host;
             viewModel.PingResult = output.ToString();
 
-            return View("Index", viewModel);
+            return View("Tools", viewModel);
         }
 
         [CustomAuthorize]
@@ -97,7 +97,7 @@ namespace VeraDemoNet.Controllers
                 logger.Error(ex);
             }
 
-            return View("Index", new ToolViewModel
+            return View("Tools", new ToolViewModel
             {
                FortuneResult = output.ToString()
             });

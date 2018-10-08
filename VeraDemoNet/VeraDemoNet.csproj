@@ -290,8 +290,8 @@
     <Content Include="Views\Blab\Blabbers.cshtml" />
     <Content Include="Views\Blab\Blab.cshtml" />
     <Content Include="Views\Account\Profile.cshtml" />
-    <Content Include="Views\Tools\Index.cshtml" />
-    <Content Include="Views\Reset\Index.cshtml" />
+    <Content Include="Views\Tools\Tools.cshtml" />
+    <Content Include="Views\Reset\Reset.cshtml" />
     <Content Include="Views\Account\RegisterFinish.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />

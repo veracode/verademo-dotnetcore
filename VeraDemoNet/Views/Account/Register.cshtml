@@ -30,7 +30,7 @@
                 </h3>
             </div>
             <div class="panel-body">
-                @using (Html.BeginForm(null, null, new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+                @using (Html.BeginForm("Register", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
                 {
                 <div class="form-horizontal">
                     <div class="form-group">

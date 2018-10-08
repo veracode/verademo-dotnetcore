@@ -98,7 +98,7 @@
 <script type="text/javascript">
     function getMoreBlabs(obj) {
         var start = $("#feed li").length + 1;
-        $.get("getMoreBlabs", {
+        $.get("@Url.Action("GetMoreBlabs", "Blab")", {
             start: start,
             numResults: 10
         }, function (data) {
