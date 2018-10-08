@@ -20,7 +20,7 @@ namespace VeraDemoNet.CustomAuthentication
         /// <returns></returns>  
         public override bool ValidateUser(string username, string password)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(username))
             {
                 return false;
             }
@@ -31,7 +31,7 @@ namespace VeraDemoNet.CustomAuthentication
                     "select username from users where username='"
                     + username + "' and password='" + Md5Hash(password) + "';").ToList();
 
-                return found.Count == 1;
+                return found.Count != 0;
             }
         }
 
@@ -219,6 +219,10 @@ namespace VeraDemoNet.CustomAuthentication
         private static string Md5Hash(string input)
         {
             var sb = new StringBuilder();
+            if (string.IsNullOrEmpty(input))
+            {
+                return sb.ToString();
+            }
 
             using (MD5 md5 = MD5.Create())
             {

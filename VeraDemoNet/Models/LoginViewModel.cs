@@ -7,7 +7,6 @@ namespace VeraDemoNet.Models
         [Required]
         [Display(Name = "User Name")]
         public string UserName { get; set; }
-        [Required]
         [Display(Name = "Password")]
         public string Password { get; set; }
         public string ReturnURL { get; set; }
