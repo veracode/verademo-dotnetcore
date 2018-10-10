@@ -9,6 +9,7 @@
 * Move 'correct' SQL over to EF so there are good examples in there too.
 
 ### Ongoing:
+* Consider whether routed ASPX & Master Pages would reflect the more common approach used by customers 
 * More flaws! Review against the VeraDemo docs and achieve Flaw Parity where
 language/framework allows.
 * Add more CRLF injection for Headers/Logs. Trust Boundary
