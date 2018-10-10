@@ -3,7 +3,7 @@
 ## TODO
 ### Immediate:
 
-Make it easily deployable into Cloud Services (MS have lots of nice tools to help)
+* Make it easily deployable into Cloud Services (MS have lots of nice tools to help)
 * Test on Greenlight.
 * Review the VeraDemo Documentation, test the flaw examples and port what works.
 * Move 'correct' SQL over to EF so there are good examples in there too.
