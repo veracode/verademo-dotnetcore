@@ -212,7 +212,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\pwm.css" />
-    <Content Include="docs\artifacts\cwe-73-payload.html" />
+    <None Include="docs\artifacts\cwe-73-payload.html" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -269,12 +269,12 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="docs\flaws\cwe-89-sql-injection.md" />
-    <Content Include="docs\flaws\cwe-80-basic-xss.md" />
-    <Content Include="docs\flaws\cwe-77-command-injection.md" />
-    <Content Include="docs\flaws\cwe-73-directory-traversal.md" />
-    <Content Include="docs\flaws\cwe-470-unsafe-reflection.md" />
-    <Content Include="docs\flaws\cwe-601-open-redirect.md" />
+    <None Include="docs\flaws\cwe-89-sql-injection.md" />
+    <None Include="docs\flaws\cwe-80-basic-xss.md" />
+    <None Include="docs\flaws\cwe-77-command-injection.md" />
+    <None Include="docs\flaws\cwe-73-directory-traversal.md" />
+    <None Include="docs\flaws\cwe-470-unsafe-reflection.md" />
+    <None Include="docs\flaws\cwe-601-open-redirect.md" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
