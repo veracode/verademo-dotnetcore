@@ -42,7 +42,10 @@ namespace VeraDemoNet.Controllers
   
         [HttpPost, ActionName("Login")]  
         public ActionResult PostLogin(LoginView loginViewModel, string ReturnUrl = "")  
-        {  
+        {
+
+            logger.Info("Entering PostLogin with username " + loginViewModel.UserName + " and target " + ReturnUrl);
+
             if (ModelState.IsValid)  
             {  
                 if (Membership.ValidateUser(loginViewModel.UserName, loginViewModel.Password))  
