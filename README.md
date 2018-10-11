@@ -28,11 +28,8 @@ Blab-a-Gag is a fairly simple forum type application which allows:
    
 ## Configure
 
-Build and installation requires [Maven](https://maven.apache.org), [MySQL](https://www.mysql.com/) and [Tomcat](https://tomcat.apache.org/).
-
-The simplest way to aquire these on MacOS is via [Homebrew](http://brew.sh/). Install Homebrew then:
-
-    brew install maven mysql tomcat
+Database credentials are held in web.config
+Log4Net information is helped in log4net.config
 
 ### Database
 
@@ -47,7 +44,7 @@ Alternatively, run from inside Visual Studio.
 
 Open `/reset` in your browser and follow the instructions to prep the database
 
-Login with your username/password as defined in `Utils.java`
+Login with your username/password as defined in `ResetController.cs :: _veraUsers
 
 ## AWS/Azure Deployment
 
