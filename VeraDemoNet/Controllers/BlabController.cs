@@ -75,7 +75,7 @@ namespace VeraDemoNet.Controllers
             { 
                 dbContext.Database.Connection.Open();
                 var listeningBlabs = dbContext.Database.Connection.CreateCommand();
-                listeningBlabs.CommandText = string.Format(sqlBlabsForMe, 1, 10);
+                listeningBlabs.CommandText = string.Format(sqlBlabsForMe, 0, 10);
                 listeningBlabs.Parameters.Add(new SqlParameter("@listener", username));
 
                 var blabsForMeResults = listeningBlabs.ExecuteReader();

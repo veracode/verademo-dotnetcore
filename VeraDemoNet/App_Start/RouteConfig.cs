@@ -34,6 +34,12 @@ namespace VeraDemoNet
             );
 
             routes.MapRoute(
+                name: "DownloadProfileImage",
+                url: "DownloadProfileImage",
+                defaults: new { controller = "Account", action = "DownloadProfileImage" }
+            );
+
+            routes.MapRoute(
                 name: "Login",
                 url: "Login",
                 defaults: new { controller = "Account", action = "Login" }

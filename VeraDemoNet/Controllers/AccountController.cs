@@ -337,8 +337,8 @@ namespace VeraDemoNet.Controllers
         }
         
         [CustomAuthorize]
-        [HttpGet, ActionName("downloadprofileimage")]
-	    public FileResult DownloadImage(string image)
+        [HttpGet, ActionName("DownloadProfileImage")]
+	    public FileResult DownloadProfileImage(string image)
 	    {
 		    logger.Info("Entering downloadImage");
 
