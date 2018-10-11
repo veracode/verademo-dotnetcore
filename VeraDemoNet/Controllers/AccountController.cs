@@ -242,8 +242,7 @@ namespace VeraDemoNet.Controllers
                     }
 
                     var formatString = "Username '" + userName + "' has password: {0}";
-                    return Content(string.Format(formatString,
-                        match.PasswordHint.Substring(0, 2) + new string('*', match.PasswordHint.Length - 2)));
+                    return Content(string.Format(formatString, match.PasswordHint.Substring(0, 2) + new string('*', match.PasswordHint.Length - 2)));
                 }
             }
             catch (Exception)
@@ -491,7 +490,7 @@ namespace VeraDemoNet.Controllers
                 query.Append("CURRENT_TIMESTAMP,");
                 query.Append("'" + realName + "',");
                 query.Append("'" + blabName + "'");
-                query.Append(");");
+                query.Append(")");
 
                 createUser.CommandText = query.ToString();
                 createUser.ExecuteNonQuery();

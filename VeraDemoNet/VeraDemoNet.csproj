@@ -270,6 +270,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="docs\flaws\cwe-117-improper-output-neutralization-for-logs.md" />
+    <Content Include="docs\flaws\cwe-200-information-exposure.md" />
+    <Content Include="docs\flaws\cwe-327-broken-crypto.md" />
     <None Include="docs\flaws\cwe-89-sql-injection.md" />
     <None Include="docs\flaws\cwe-80-basic-xss.md" />
     <None Include="docs\flaws\cwe-77-command-injection.md" />
