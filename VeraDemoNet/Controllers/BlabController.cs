@@ -32,6 +32,12 @@ namespace VeraDemoNet.Controllers
             "GROUP BY c.blabid, u.username, u.blab_name, b.content, b.timestamp,  b.blabid " +
             "ORDER BY b.timestamp DESC OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY";
 
+        private string sqlSearchBlabs =
+            "SELECT b.blabber, b.content, b.timestamp " +
+            "FROM blabs b " +
+            "WHERE b.content LIKE '%{0}%' " + 
+            "ORDER BY b.timestamp DESC";
+        
         private string sqlBlabDetails = 
             "SELECT blabs.content, users.blab_name " +
             "FROM blabs INNER JOIN users ON blabs.blabber = users.username " + 
@@ -62,6 +68,48 @@ namespace VeraDemoNet.Controllers
         {
             logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);    
         }
+
+        [CustomAuthorize]
+        [ActionName("SearchBlabs"), HttpGet]
+        public ActionResult GetSearchBlabs()
+        {
+            return View("SearchBlabs", new SearchBlabsViewModel());
+        }
+
+        [CustomAuthorize]
+        [ActionName("SearchBlabs"), HttpPost]
+        public ActionResult PostSearchBlabs(string searchText)
+        {
+            var searchBlabslist = new List<BlabSearchResultViewModel>();
+            using (var dbContext = new BlabberDB())
+            {
+                dbContext.Database.Connection.Open();
+                var searchBlabs = dbContext.Database.Connection.CreateCommand();
+                searchBlabs.CommandText = string.Format(sqlSearchBlabs, searchText);
+                
+                var searchBlabsResults = searchBlabs.ExecuteReader();
+                while (searchBlabsResults.Read())
+                {
+                    var post = new BlabSearchResultViewModel
+                    {
+                        Blabber = searchBlabsResults.GetString(0),
+                        Content = searchBlabsResults.GetString(1),
+                        BlabDate = searchBlabsResults.GetDateTime(2),
+                    };
+
+                    searchBlabslist.Add(post);
+                }
+            }
+
+            var model = new SearchBlabsViewModel
+            {
+                Blabs = searchBlabslist,
+                SearchText = searchText
+            };
+
+            return View("SearchBlabs", model);
+        }
+
 
         [CustomAuthorize]
         [ActionName("Feed"), HttpGet]

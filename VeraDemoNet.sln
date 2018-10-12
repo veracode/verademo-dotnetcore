@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "flaws", "flaws", "{0F2037C7
 	ProjectSection(SolutionItems) = preProject
 		docs\flaws\cwe-117-improper-output-neutralization-for-logs.md = docs\flaws\cwe-117-improper-output-neutralization-for-logs.md
 		docs\flaws\cwe-200-information-exposure.md = docs\flaws\cwe-200-information-exposure.md
+		..\..\..\Downloads\verademo-master\verademo-master\docs\flaws\cwe-327-broken-crypto.md = ..\..\..\Downloads\verademo-master\verademo-master\docs\flaws\cwe-327-broken-crypto.md
 		docs\flaws\cwe-470-unsafe-reflection.md = docs\flaws\cwe-470-unsafe-reflection.md
 		docs\flaws\cwe-601-open-redirect.md = docs\flaws\cwe-601-open-redirect.md
 		docs\flaws\cwe-73-directory-traversal.md = docs\flaws\cwe-73-directory-traversal.md
