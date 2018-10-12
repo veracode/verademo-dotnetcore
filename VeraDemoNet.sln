@@ -5,6 +5,25 @@ VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VeraDemoNet", "VeraDemoNet\VeraDemoNet.csproj", "{130A5D09-D079-449D-88F3-FBA5617A3F24}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{A87EBCF8-9096-49EE-A199-950EB545DAF0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "flaws", "flaws", "{0F2037C7-D998-4032-A4F6-0678C0A806EF}"
+	ProjectSection(SolutionItems) = preProject
+		docs\flaws\cwe-117-improper-output-neutralization-for-logs.md = docs\flaws\cwe-117-improper-output-neutralization-for-logs.md
+		docs\flaws\cwe-200-information-exposure.md = docs\flaws\cwe-200-information-exposure.md
+		docs\flaws\cwe-470-unsafe-reflection.md = docs\flaws\cwe-470-unsafe-reflection.md
+		docs\flaws\cwe-601-open-redirect.md = docs\flaws\cwe-601-open-redirect.md
+		docs\flaws\cwe-73-directory-traversal.md = docs\flaws\cwe-73-directory-traversal.md
+		docs\flaws\cwe-77-command-injection.md = docs\flaws\cwe-77-command-injection.md
+		docs\flaws\cwe-80-basic-xss.md = docs\flaws\cwe-80-basic-xss.md
+		docs\flaws\cwe-89-sql-injection.md = docs\flaws\cwe-89-sql-injection.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "artifacts", "artifacts", "{50687040-E907-4D7A-BF96-2B0BBE7D7F01}"
+	ProjectSection(SolutionItems) = preProject
+		docs\artifacts\cwe-73-payload.html = docs\artifacts\cwe-73-payload.html
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +37,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0F2037C7-D998-4032-A4F6-0678C0A806EF} = {A87EBCF8-9096-49EE-A199-950EB545DAF0}
+		{50687040-E907-4D7A-BF96-2B0BBE7D7F01} = {A87EBCF8-9096-49EE-A199-950EB545DAF0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0922A26B-6A25-469A-8AF5-2F556C33C59E}
