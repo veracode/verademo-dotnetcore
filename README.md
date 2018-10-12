@@ -64,10 +64,9 @@ This is a port of the Java VeraDemo. While not all the flaws have been implement
 * Make it easily deployable into Cloud Services (MS have lots of nice tools to help)
 * Review the VeraDemo Documentation, test the flaw examples and port what works
 * Test on Greenlight.
-* Move 'correct' SQL over to EF so there are good examples in there too.
 
 ## Ongoing:
-* Consider whether routed ASPX & Master Pages would reflect the more common approach used by customers 
+* Add a couple of 'legacy' ASPX pages so that Greenlight can be demoed on pages (it doesn't work on CSHTML) 
 * More flaws! Review against the VeraDemo docs and achieve Flaw Parity where language/framework allows.
 * Add more CRLF injection for Headers/Logs. Trust Boundary Violation, CSRF.
-* More .NET-specific flaws – review typical ASC findings. Missing Validation Attributes, Dynamic modification of models.
+* More .NET-specific flaws – review typical ASC findings. Missing Validation Attributes, (~~Dynamic modification of models~~ - ADDED as CWE-915).
