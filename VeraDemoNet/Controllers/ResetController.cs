@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -16,7 +17,7 @@ namespace VeraDemoNet.Controllers
 
         private static readonly User[] _veraUsers =
         {
-            DataAccess.User.Create("admin", "admin", "Thats Mr Administrator to you."),
+            DataAccess.User.Create("admin", "admin", "Thats Mr Administrator to you.", true),
             DataAccess.User.Create("john", "John", "John Smith"),
             DataAccess.User.Create("paul", "Paul", "Paul Farrington"),
             DataAccess.User.Create("chrisc", "Chris", "Chris Campbell"),
@@ -84,7 +85,7 @@ namespace VeraDemoNet.Controllers
                     connection.Open();
 
                     RecreateDatabaseSchema(connection);
-                    AddUserData(connection);
+                    AddUserData(dbContext);
                     AddListeners(connection);
                     var blabsList = AddBlabs(connection);
                     AddComments(connection, blabsList);
@@ -161,46 +162,17 @@ namespace VeraDemoNet.Controllers
 
         }
 
-        private void AddUserData(DbConnection connect)
+        private void AddUserData(BlabberDB context)
         {
             logger.Info("Preparing the Statement for adding users");
 
-            using (var tr = connect.BeginTransaction())
+            foreach (var user in _veraUsers)
             {
-                foreach (var user in _veraUsers)
-                {
-                    logger.Info("Adding user " + user.UserName);
-
-                    var usersStatement = connect.CreateCommand();
-                    usersStatement.Transaction = tr;
-                    usersStatement.CommandText =
-                        "INSERT INTO users (username, password, password_hint, created_at, last_login, real_name, blab_name) " +
-                        "values (@username, @password, @password_hint, @created_at, @last_login, @real_name, @blab_name)";
-
-                    // Override the default created at / last Login so they're more natural.
-                    user.CreatedAt = DateTime.Now.AddDays(new Random().Next(20, 230) * -1);
-                    user.LastLogin = DateTime.Now.AddDays(new Random().Next(0, 20) * -1);
-                    
-                    usersStatement.Parameters.Add(
-                        new SqlParameter {ParameterName = "@username", Value = user.UserName});
-                    usersStatement.Parameters.Add(
-                        new SqlParameter {ParameterName = "@password", Value = user.Password});
-                    usersStatement.Parameters.Add(new SqlParameter
-                        {ParameterName = "@password_hint", Value = user.PasswordHint});
-                    usersStatement.Parameters.Add(new SqlParameter
-                        {ParameterName = "@created_at", Value = user.CreatedAt});
-                    usersStatement.Parameters.Add(new SqlParameter
-                        {ParameterName = "@last_login", Value = (object)user.LastLogin ?? DBNull.Value});
-                    usersStatement.Parameters.Add(new SqlParameter
-                        {ParameterName = "@real_name", Value = user.RealName});
-                    usersStatement.Parameters.Add(new SqlParameter
-                        {ParameterName = "@blab_name", Value = user.BlabName});
-
-                    usersStatement.ExecuteNonQuery();
-                }
-
-                tr.Commit();
+                logger.Info("Adding user " + user.UserName);
+                user.Password = user.Md5(user.Password);
+                context.Users.Add(user);
             }
+            context.SaveChanges();
         }
 
         private string[] AddBlabs(DbConnection connect)

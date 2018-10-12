@@ -43,6 +43,7 @@ CREATE TABLE [users] (
     [last_login]    DATETIME      DEFAULT (NULL) NULL,
     [real_name]     VARCHAR (100) DEFAULT (NULL) NULL,
     [blab_name]     VARCHAR (100) DEFAULT (NULL) NULL,
+	[is_admin]		BIT DEFAULT (0),
     PRIMARY KEY CLUSTERED ([username] ASC)
 );
 GO

@@ -318,7 +318,7 @@ namespace VeraDemoNet.Controllers
 
         private void PopulateProfileViewModel(DbConnection connect, string username, ProfileViewModel viewModel)
         {
-            string sqlMyProfile = "SELECT username, real_name, blab_name FROM users WHERE username = '" + username + "'";
+            string sqlMyProfile = "SELECT username, real_name, blab_name, is_admin FROM users WHERE username = '" + username + "'";
             logger.Info(sqlMyProfile);
 
             using (var eventsCommand = connect.CreateCommand())
@@ -331,11 +331,11 @@ namespace VeraDemoNet.Controllers
                         viewModel.UserName = userProfile.GetString(0);
                         viewModel.RealName = userProfile.GetString(1);
                         viewModel.BlabName = userProfile.GetString(2);
+                        viewModel.IsAdmin = userProfile.GetBoolean(3);
                         viewModel.Image = GetProfileImageNameFromUsername(viewModel.UserName);
                     }
                 }
             }
-
         }
         
         [CustomAuthorize]
@@ -459,22 +459,23 @@ namespace VeraDemoNet.Controllers
         }
 
         [HttpPost, ActionName("RegisterFinish")]
-        public ActionResult PostRegisterFinish(string userName, string password, string cpassword, string realName, string blabName)
+        public ActionResult PostRegisterFinish(User user, string cpassword)
         {
-            if (password != cpassword)
+            if (user.Password != cpassword)
             {
                 logger.Info("Password and Confirm Password do not match");
                 return View(new RegisterViewModel
                 {
                     Error = "The Password and Confirm Password values do not match. Please try again.",
-                    UserName = userName,
-                    RealName = realName,
-                    BlabName = blabName
+                    UserName = user.UserName,
+                    RealName = user.RealName,
+                    BlabName = user.BlabName
                 });
             }
 
             // Use the user class to get the hashed password.
-            var user = new User(userName, password, DateTime.Now, null, blabName, realName);
+            user.Password = user.Md5(user.Password);
+            user.CreatedAt = DateTime.Now;
             
             /* START BAD CODE */
             // Execute the query
@@ -482,24 +483,14 @@ namespace VeraDemoNet.Controllers
             {
                 var connection = dbContext.Database.Connection;
                 connection.Open();
-                var createUser = connection.CreateCommand();
-                var query = new StringBuilder();
-                query.Append("insert into users (username, password, created_at, real_name, blab_name) values(");
-                query.Append("'" + userName + "',");
-                query.Append("'" + user.Password + "',");
-                query.Append("CURRENT_TIMESTAMP,");
-                query.Append("'" + realName + "',");
-                query.Append("'" + blabName + "'");
-                query.Append(")");
-
-                createUser.CommandText = query.ToString();
-                createUser.ExecuteNonQuery();
+                dbContext.Users.Add(user);
+                dbContext.SaveChanges();
             }
             /* END BAD CODE */
 
             //EmailUser(userName);
 
-            return RedirectToAction("Login", "Account", new LoginView {UserName = userName});
+            return RedirectToAction("Login", "Account", new LoginView {UserName = user.UserName});
         }
     }
 }

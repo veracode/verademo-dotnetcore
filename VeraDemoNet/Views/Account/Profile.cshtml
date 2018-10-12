@@ -24,7 +24,9 @@
         <div class="detailBox">
             <div class="titleBox">
                 <label>Your Profile</label>
+                <label>Role: @(Model.IsAdmin ? "Admin" : "User")</label>
             </div>
+            
             <div class="actionBox">
                 <form method="post" action="@Url.Action("Profile", "Account") " id="updateprofile" enctype="multipart/form-data">
                     <input type="hidden" name="returnPath" value="">

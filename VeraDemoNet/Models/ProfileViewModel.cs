@@ -11,5 +11,7 @@ namespace VeraDemoNet.Models
         public string RealName { get; set; }
         public string Image { get; set; }
         public string BlabName { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
 }

@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "flaws", "flaws", "{0F2037C7
 		docs\flaws\cwe-77-command-injection.md = docs\flaws\cwe-77-command-injection.md
 		docs\flaws\cwe-80-basic-xss.md = docs\flaws\cwe-80-basic-xss.md
 		docs\flaws\cwe-89-sql-injection.md = docs\flaws\cwe-89-sql-injection.md
+		docs\flaws\cwe-915-improperly-Controlled-modification-of-dynamically-determined-object-attributes.md = docs\flaws\cwe-915-improperly-Controlled-modification-of-dynamically-determined-object-attributes.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "artifacts", "artifacts", "{50687040-E907-4D7A-BF96-2B0BBE7D7F01}"
