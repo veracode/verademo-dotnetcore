@@ -52,7 +52,7 @@ TODO
 
 ## Exploitation Demos
 
-See the `VeraDemoNet/docs` folder
+See the `docs` folder
 
 
 # TODO
