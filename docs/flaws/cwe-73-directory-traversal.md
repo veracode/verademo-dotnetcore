@@ -8,18 +8,18 @@ for code execution or be used as a step to further system compromise.
 
 Exploit 1 - Stealing files
 -------
-1. Go to /profile as a logged in user
+1. Go to `/profile` as a logged in user
 2. Copy the URL of the "Download Profile Image" link
 3. Paste the URL into the browser URL bar
-4. Change the value of the `image` parameter to: ..\web.config
+4. Change the value of the `image` parameter to: `..\web.config`
 5. Observe that the web.config configuration file is downloaded
 
 Exploit 2 - Upload Files
 -------
-1. Go to /profile as a logged in user
+1. Go to `/profile` as a logged in user
 2. Choose a payload as the profile image (example provided in doc/artifacts)
-3. Change the username to: ..\resources\exploit
-5. Navigate to /resources/exploit.html
+3. Change the username to: `..\resources\exploit`
+5. Navigate to `/resources/exploit.html`
 6. See the script renders successfully
 
 

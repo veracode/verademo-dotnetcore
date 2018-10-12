@@ -11,20 +11,23 @@ their own SQL components.
 
 Exploit 1 - Create an Admin (Edit the HTML)
 -------------------------------------------
-1. Go to /register
-2. Fill out a new username and hit Register
-3. On the next screen you'll be asked to fill out details for the user. Edit the HTML using the bwoser developer tools add add the following into the form: <input name="IsAdmin" Value="true"/>
+1. Go to `/register`
+2. Fill out a new username and hit `Register`
+3. On the next screen you'll be asked to fill out details for the user. Edit the HTML using the browser developer tools add add the following into the form: 
+```HTML
+<input name="IsAdmin" Value="true"/>
+```
 4. Fill out the rest of the for and hit 'Register'
 5. Login as the new user, and go to the Profile. The role should be 'Admin'
 
 
 Exploit 2 - Create an Admin (Intercept the request)
 ---------------------------------------------------
-1. Go to /register
-2. Fill out a new username and hit Register
-3. On the next screen you'll be asked to fill out details for the user. Hit 'Intercept' on your intercepting proxy.
-4. Fill out the rest of the for and hit 'Register'
-5. Intercept the response and in the response add: &IsAdmin=true
+1. Go to `/register`
+2. Fill out a new username and hit `Register`
+3. On the next screen you'll be asked to fill out details for the user. Hit `Intercept` on your intercepting proxy.
+4. Fill out the rest of the for and hit `Register`
+5. Intercept the response and in the response add: `&IsAdmin=true`
 6. Login as the new user, and go to the Profile. The role should be 'Admin'
 
 
@@ -34,7 +37,7 @@ Validate responses. If a value cannot be set by the user, ensure it is not used.
 
 Remediate
 ---------
-Use a Bind[Include] attribute where possible to explicitly define the attributes that the user can set.
+Use a `Bind[Include]` attribute where possible to explicitly define the attributes that the user can set.
 Use an appropriate ViewModel approach so that classes do not have unnecessary properties exposed.
 
 Resources

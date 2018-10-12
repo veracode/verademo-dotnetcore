@@ -7,19 +7,23 @@ injecting their own HTML that may do anything with the page.
 Exploit
 -------
 1. Register an account with the following data:
-   Username: hacker
-   Password: hacker
-   Confirm Password: hacker
-   Real Name: Ms Hacker
-   Blab Name: Hacker
-2. Login with hacker/hacker
-3. Add the following Blab: There's no scripting like cross site scripting.<script>alert("Hacked by Ms Hacker")</script>
+
+| Field    | Value  |
+|:----------|:--------|
+| Username | hacker |
+| Password | hacker |
+| Confirm Password | hacker |
+| Real Name | Ms Hacker |
+| Blab Name | Hacker |
+
+2. Login with `hacker`/`hacker`
+3. Add the following Blab: There's no scripting like cross site scripting.`<script>alert("Hacked by Ms Hacker")</script>`
 4. Log out
-5. Log in as admin/admin
+5. Log in as `admin`/`admin`
 6. Go to Blabbers
 7. Follow Hacker.
 8. Go to Feed.
-9. Observe an alert box "Hacked by Ms Hacker".
+9. Observe an alert box `Hacked by Ms Hacker`.
 
 Mitigate
 --------

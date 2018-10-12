@@ -8,7 +8,7 @@ Exploit
 -------
 1. Login as a non-admin user (e.g. john)
 1. Go to /Search
-2. For the search text type in: ' union select username, password, CURRENT_TIMESTAMP from users where username = 'admin'--
+2. For the search text type in: `' union select username, password, CURRENT_TIMESTAMP from users where username = 'admin'--`
 3. Observe the addtional result added to the results that includes the username/hashed password.
 6. Copy the hash from the 'Blab' field
 7. Search Google for the hash and find a site that displays the original value

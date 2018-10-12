@@ -7,7 +7,7 @@ the destination website served when navigating through VeraDemo.
 
 Exploit
 -------
-1. Go to /Login?ReturnUrl=http://www.google.com
+1. Go to `/Login?ReturnUrl=http://www.google.com`
 2. Login, if the user is not already
 3. Observe the Google homepage is loaded
 

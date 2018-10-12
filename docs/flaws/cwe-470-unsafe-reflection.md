@@ -16,7 +16,7 @@ We can exploit this like so:
 5. Note the POST requests, note the command in the post data for both requests.
 6. Inspect a Listen or Ignore button.
 7. Rename it to "Remove Account"
-8. Change the hidden ```command``` field to ```removeAccount```.
+8. Change the hidden `command` field to `removeAccount`.
 9. Click the Remove Account button.
 10. Notice the account has now been removed.
 

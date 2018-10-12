@@ -7,7 +7,7 @@ features that are helpful for debugging but also very helpful for attackers.
 Exploit
 -------
 1. Go to /login
-2. Fill in for Username: test'
+2. Fill in for Username: `test'`
 3. Press Login
 4. Observe stack trace with a lot of information, include SQL information.
 
