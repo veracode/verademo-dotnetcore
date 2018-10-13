@@ -6,9 +6,13 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VeraDemoNet", "VeraDemoNet\VeraDemoNet.csproj", "{130A5D09-D079-449D-88F3-FBA5617A3F24}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{A87EBCF8-9096-49EE-A199-950EB545DAF0}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "flaws", "flaws", "{0F2037C7-D998-4032-A4F6-0678C0A806EF}"
 	ProjectSection(SolutionItems) = preProject
+		docs\flaws\cwe-100-technology-specific-input-validation-problems.md = docs\flaws\cwe-100-technology-specific-input-validation-problems.md
 		docs\flaws\cwe-117-improper-output-neutralization-for-logs.md = docs\flaws\cwe-117-improper-output-neutralization-for-logs.md
 		docs\flaws\cwe-200-information-exposure.md = docs\flaws\cwe-200-information-exposure.md
 		docs\flaws\cwe-327-broken-crypto.md = docs\flaws\cwe-327-broken-crypto.md

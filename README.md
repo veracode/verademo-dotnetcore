@@ -48,7 +48,12 @@ Login with your username/password as defined in `ResetController.cs :: _veraUser
 
 ## AWS/Azure Deployment
 
-TODO
+### Azure
+The deployment from Visual Studio recognises the connection string and will update to point to the Azure SQL Server instance
+
+### AWS
+Install the AWS Toolkit for VS 2017 - https://aws.amazon.com/visualstudio/
+
 
 ## Exploitation Demos
 
@@ -57,7 +62,6 @@ See the `docs` folder
 
 # TODO
 
-This is a port of the Java VeraDemo. While not all the flaws have been implemented, there are a good selection of SQLi, CRLF etc flaws.
 
 ## Immediate:
 
