@@ -11,11 +11,11 @@ Exploit
 
 Mitigation
 ----------
-* Validate that the password is appropriate in-code based on a corporate policy
+* Validate that the password is appropriate in-code based on security policy
 
 Remediation
 -----------
-* Apply an appropriate ValidationAttribute on the incoming properties based on the business requirements.
+* Apply an appropriate ValidationAttribute on the incoming properties based on security policy.
 
 Resources
 ---------
