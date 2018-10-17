@@ -65,12 +65,13 @@ See the `docs` folder
 
 ## Immediate:
 
-* Make it easily deployable into Cloud Services (MS have lots of nice tools to help)
-* Review the VeraDemo Documentation, test the flaw examples and port what works
+* Make it more easily deployable into Cloud Services (MS have lots of nice tools to help)
 * Test on Greenlight.
 
 ## Ongoing:
 * Add a couple of 'legacy' ASPX pages so that Greenlight can be demoed on pages (it doesn't work on CSHTML) 
 * More flaws! Review against the VeraDemo docs and achieve Flaw Parity where language/framework allows.
-* Add more CRLF injection for Headers/Logs. Trust Boundary Violation, CSRF.
-* More .NET-specific flaws – review typical ASC findings. Missing Validation Attributes, (~~Dynamic modification of models~~ - ADDED as CWE-915).
+* Add more CRLF injection for Headers/Logs. Trust Boundary Violation, CSRF, 2nd order SQLi
+* DOM based XSS to demonstrate Javascript-oriented flaw remedation
+* More .NET-specific flaws – review typical ASC findings. (~~Missing Validation Attributes~~ - ADDED as CWE-100), (~~Dynamic modification of models~~ - ADDED as CWE-915).
+* SourceClear/SCA demonstration through use of outdated/flaws 3rd party components
