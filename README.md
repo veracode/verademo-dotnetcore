@@ -70,8 +70,13 @@ See the `docs` folder
 
 ## Ongoing:
 * Add a couple of 'legacy' ASPX pages so that Greenlight can be demoed on pages (it doesn't work on CSHTML) 
-* More flaws! Review against the VeraDemo docs and achieve Flaw Parity where language/framework allows.
-* Add more CRLF injection for Headers/Logs. Trust Boundary Violation, CSRF, 2nd order SQLi
 * DOM based XSS to demonstrate Javascript-oriented flaw remedation
-* More .NET-specific flaws – review typical ASC findings. (~~Missing Validation Attributes~~ - ADDED as CWE-100), (~~Dynamic modification of models~~ - ADDED as CWE-915).
 * SourceClear/SCA demonstration through use of outdated/flaws 3rd party components
+
+## Missing from here, but in Verademo
+* cwe-113-http-response-splitting
+* cwe-134-format-string-injection
+* cwe-384-session-fixation
+* cwe-501-trust-boundary-violation
+* cwe-502-deserialization-of-untrusted-data
+* cwe-89-second-order-sql-injection
