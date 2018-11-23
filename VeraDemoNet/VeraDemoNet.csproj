@@ -176,7 +176,6 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ResetController.cs" />
     <Compile Include="Models\BlabSearchResultViewModel.cs" />
-    <Compile Include="Models\VeraDemoUser.cs" />
     <Compile Include="Models\SearchBlabsViewModel.cs" />
     <Compile Include="HtmlHelpers\MenuSelectedHelper.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
@@ -201,6 +200,7 @@
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\ProfileViewModel.cs" />
     <Compile Include="Models\ToolViewModel.cs" />
+    <Compile Include="DataAccess\BasicUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Text;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
@@ -412,6 +413,7 @@ namespace VeraDemoNet.Controllers
 
         private List<string> RetrieveMyEvents(DbConnection connect, string username)
         {
+            // START BAD CODE
             var sqlMyEvents = "select event from users_history where blabber='" + 
                               username + "' ORDER BY eventid DESC; ";
             logger.Info(sqlMyEvents);
@@ -428,6 +430,8 @@ namespace VeraDemoNet.Controllers
                     }
                 }
             }
+
+            // END BAD CODE
 
             return myEvents;
         }
@@ -482,22 +486,36 @@ namespace VeraDemoNet.Controllers
                     Error = "The Password and Confirm Password values do not match. Please try again.",
                     UserName = user.UserName,
                     RealName = user.RealName,
-                    BlabName = user.BlabName
+                    BlabName = user.BlabName,
                 });
             }
 
             // Use the user class to get the hashed password.
-            user.Password = user.Md5(user.Password);
+            user.Password = Md5Hash(user.Password);
             user.CreatedAt = DateTime.Now;
             
             /* START BAD CODE */
             // Execute the query
             using (var dbContext = new BlabberDB())
             {
-                var connection = dbContext.Database.Connection;
-                connection.Open();
-                dbContext.Users.Add(user);
-                dbContext.SaveChanges();
+                var connect = dbContext.Database.Connection;
+                connect.Open();
+
+                var query = new StringBuilder();
+                query.Append("insert into users (username, password, created_at, real_name, blab_name) values(");
+                query.Append("'" + user.UserName + "',");
+                query.Append("'" + user.Password + "',");
+                query.Append("SYSDATETIME(),");
+                query.Append("'" + user.RealName + "',");
+                query.Append("'" + user.BlabName + "'");
+                query.Append(");");
+
+                using (var update = connect.CreateCommand())
+                {
+                    logger.Info("Preparing the Prepared Statement: " + query);
+                    update.CommandText = query.ToString();
+                    update.ExecuteNonQuery();
+                }
             }
             /* END BAD CODE */
 

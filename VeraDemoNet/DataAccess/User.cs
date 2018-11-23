@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace VeraDemoNet.DataAccess
 {
@@ -38,23 +37,6 @@ namespace VeraDemoNet.DataAccess
             BlabName = blabName;
             RealName = realName;
             IsAdmin = isAdmin;
-        }
-
-        public string Md5(string val)
-        {
-            var sb = new StringBuilder();
-
-            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
-            {
-                var retVal = md5.ComputeHash(Encoding.Unicode.GetBytes(val));
-                
-                foreach (var t in retVal)
-                {
-                    sb.Append(t.ToString("x2"));
-                }
-            }
-           
-            return sb.ToString();
         }
     }
 }

@@ -11,7 +11,7 @@ using VeraDemoNet.DataAccess;
 
 namespace VeraDemoNet.Controllers
 {
-    public class ResetController : Controller
+    public class ResetController : AuthControllerBase
     {
         protected readonly log4net.ILog logger;
 
@@ -169,7 +169,7 @@ namespace VeraDemoNet.Controllers
             foreach (var user in _veraUsers)
             {
                 logger.Info("Adding user " + user.UserName);
-                user.Password = user.Md5(user.Password);
+                user.Password = Md5Hash(user.Password);
                 context.Users.Add(user);
             }
             context.SaveChanges();
