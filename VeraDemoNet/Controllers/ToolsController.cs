@@ -9,7 +9,7 @@ using VeraDemoNet.Models;
 
 namespace VeraDemoNet.Controllers
 {
-    public class ToolsController : Controller
+    public class ToolsController : AuthControllerBase
     {
         protected readonly log4net.ILog logger;
 
@@ -18,17 +18,25 @@ namespace VeraDemoNet.Controllers
             logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);    
         }
 
-        [CustomAuthorize]
         [HttpGet, ActionName("Tools")]
         public ActionResult GetTools()
         {
+            if (IsUserLoggedIn() == false)
+            {
+                return RedirectToLogin(HttpContext.Request.RawUrl);
+            }
+
             return View(new ToolViewModel());
         }
 
-        [CustomAuthorize]
         [HttpPost]
         public ActionResult Ping(string host)
         {
+            if (IsUserLoggedIn() == false)
+            {
+                return RedirectToLogin(HttpContext.Request.RawUrl);
+            }
+
             var viewModel = new ToolViewModel();
 
             if (string.IsNullOrEmpty(host))
@@ -64,10 +72,14 @@ namespace VeraDemoNet.Controllers
             return View("Tools", viewModel);
         }
 
-        [CustomAuthorize]
         [HttpPost]
         public ActionResult Fortune(string fortuneFile)
         {
+            if (IsUserLoggedIn() == false)
+            {
+                return RedirectToLogin(HttpContext.Request.RawUrl);
+            }
+
             var output = new StringBuilder();
 
             if (string.IsNullOrEmpty(fortuneFile)) 

@@ -6,13 +6,12 @@ using System.Reflection;
 using System.Text;
 using System.Web.Mvc;
 using VeraDemoNet.Commands;
-using VeraDemoNet.CustomAuthentication;
 using VeraDemoNet.DataAccess;
 using VeraDemoNet.Models;
 
 namespace VeraDemoNet.Controllers
 {
-    public class BlabController : Controller
+    public class BlabController : AuthControllerBase
     {
         protected readonly log4net.ILog logger;
 
@@ -69,17 +68,25 @@ namespace VeraDemoNet.Controllers
             logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);    
         }
 
-        [CustomAuthorize]
         [ActionName("SearchBlabs"), HttpGet]
         public ActionResult GetSearchBlabs()
         {
+            if (IsUserLoggedIn() == false)
+            {
+                return RedirectToLogin(HttpContext.Request.RawUrl);
+            }
+
             return View("SearchBlabs", new SearchBlabsViewModel());
         }
 
-        [CustomAuthorize]
         [ActionName("SearchBlabs"), HttpPost]
         public ActionResult PostSearchBlabs(string searchText)
         {
+            if (IsUserLoggedIn() == false)
+            {
+                return RedirectToLogin(HttpContext.Request.RawUrl);
+            }
+
             var searchBlabslist = new List<BlabSearchResultViewModel>();
             using (var dbContext = new BlabberDB())
             {
@@ -111,11 +118,15 @@ namespace VeraDemoNet.Controllers
         }
 
 
-        [CustomAuthorize]
         [ActionName("Feed"), HttpGet]
         public ActionResult GetFeed()
         {
-            var username = User.Identity.Name;
+            if (IsUserLoggedIn() == false)
+            {
+                return RedirectToLogin(HttpContext.Request.RawUrl);
+            }
+
+            var username = GetLoggedInUsername();
 
             // Find the Blabs that this user listens to
             var feedBlabs = new List<Blab>();
@@ -181,11 +192,15 @@ namespace VeraDemoNet.Controllers
             );
         }
 
-        [CustomAuthorize]
         [ActionName("Feed"), HttpPost]
         public ActionResult PostFeed(string blab)
         {
-            var username = User.Identity.Name;
+            if (IsUserLoggedIn() == false)
+            {
+                return RedirectToLogin(HttpContext.Request.RawUrl);
+            }
+
+            var username = GetLoggedInUsername();
             
             using (var dbContext = new BlabberDB())
             {
@@ -199,18 +214,26 @@ namespace VeraDemoNet.Controllers
             return RedirectToAction("Feed");
         }
 
-        [CustomAuthorize]
         [HttpGet, ActionName("Blab")]
         public ActionResult GetBlab(int blabId)
         {
+            if (IsUserLoggedIn() == false)
+            {
+                return RedirectToLogin(HttpContext.Request.RawUrl);
+            }
+
             var blabViewModel = CreateBlabViewModel(blabId);
             return View(blabViewModel);
         }
 
-        [CustomAuthorize]
         [HttpGet, ActionName("Blabbers")]
         public ActionResult GetBlabbers(string sort)
         {
+            if (IsUserLoggedIn() == false)
+            {
+                return RedirectToLogin(HttpContext.Request.RawUrl);
+            }
+
             if (string.IsNullOrWhiteSpace(sort)) 
             {
                 sort = "blab_name ASC";
@@ -263,11 +286,15 @@ namespace VeraDemoNet.Controllers
             return viewModel;
         }
 
-        [CustomAuthorize]
         [HttpPost, ActionName("Blabbers")]
         public ActionResult PostBlabbers(string blabberUsername, string command)
         {
-            var username = User.Identity.Name;
+            if (IsUserLoggedIn() == false)
+            {
+                return RedirectToLogin(HttpContext.Request.RawUrl);
+            }
+
+            var username = GetLoggedInUsername();
 
             try
             {
@@ -294,11 +321,16 @@ namespace VeraDemoNet.Controllers
         }
 
 
-        [CustomAuthorize]
         [HttpPost, ActionName("Blab")]
         public ActionResult PostBlab(int blabId, string comment)
         {
-            var username = User.Identity.Name;
+            if (IsUserLoggedIn() == false)
+            {
+                return RedirectToLogin(HttpContext.Request.RawUrl);
+            }
+
+            var username = GetLoggedInUsername();
+
             var error = "";
 
             using (var dbContext = new BlabberDB())
@@ -323,9 +355,15 @@ namespace VeraDemoNet.Controllers
         }
 
         [HttpGet]
-        [CustomAuthorize]
         public ActionResult GetMoreBlabs(int start, int numResults)
         {
+            if (IsUserLoggedIn() == false)
+            {
+                return RedirectToLogin(HttpContext.Request.RawUrl);
+            }
+
+            var username = GetLoggedInUsername();
+
             var template = "<li><div><div class='commenterImage'>" +
                            "<img src='" + Url.Content("~/Images/") +"{0}.png'>" + 
                            "</div>" + 
@@ -335,8 +373,6 @@ namespace VeraDemoNet.Controllers
                            "<span class='date sub-text'><a href=\"blab?blabid={4}\">{5} Comments</a></span>" + 
                            "</div>" + 
                            "</div></li>";
-
-            var username = User.Identity.Name;
 
             // Get the Database Connection
             var returnTemplate = new StringBuilder();

@@ -6,21 +6,18 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Text;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Security;
 using Newtonsoft.Json;
-using VeraDemoNet.CustomAuthentication;
-using VeraDemoNet.CustomAuthentication.CustomAuthenticationMVC.CustomAuthentication;
 using VeraDemoNet.DataAccess;
 using VeraDemoNet.Models;
 
 namespace VeraDemoNet.Controllers  
 {  
     // https://www.c-sharpcorner.com/article/custom-authentication-with-asp-net-mvc/
-    public class AccountController : Controller  
+    public class AccountController : AuthControllerBase
     {
         protected readonly log4net.ILog logger;
 
@@ -32,10 +29,11 @@ namespace VeraDemoNet.Controllers
         [HttpGet, ActionName("Login")]  
         public ActionResult GetLogin(string ReturnUrl = "")
         {  
-            if (User.Identity.IsAuthenticated)  
+            if (IsUserLoggedIn())
             {  
                 return GetLogOut();  
             }  
+
             ViewBag.ReturnUrl = ReturnUrl;  
             return View();  
         }  
@@ -46,30 +44,30 @@ namespace VeraDemoNet.Controllers
 
             logger.Info("Entering PostLogin with username " + loginViewModel.UserName + " and target " + ReturnUrl);
 
-            if (ModelState.IsValid)  
-            {  
-                if (Membership.ValidateUser(loginViewModel.UserName, loginViewModel.Password))  
-                {  
-                    var user = (CustomMembershipUser)Membership.GetUser(loginViewModel.UserName, false);  
-                    if (user != null)  
+            if (ModelState.IsValid)
+            {
+                var userDetails = LoginUser(loginViewModel.UserName, loginViewModel.Password);
+
+
+                // TODO
+                if (userDetails!=null)  
+                {
+                    CustomSerializeModel userModel = new Models.CustomSerializeModel()  
                     {  
-                        CustomSerializeModel userModel = new Models.CustomSerializeModel()  
-                        {  
-                            UserName = user.UserName,
-                            BlabName = user.BlabName,
-                            RealName = user.RealName
-                        };  
+                        UserName = userDetails.UserName,
+                        BlabName = userDetails.BlabName,
+                        RealName = userDetails.RealName
+                    };  
   
-                        var userData = JsonConvert.SerializeObject(userModel);  
-                        var authTicket = new FormsAuthenticationTicket  
-                            (  
-                            1, loginViewModel.UserName, DateTime.Now, DateTime.Now.AddMinutes(15), false, userData  
-                            );  
+                    var userData = JsonConvert.SerializeObject(userModel);  
+                    var authTicket = new FormsAuthenticationTicket  
+                        (  
+                        1, loginViewModel.UserName, DateTime.Now, DateTime.Now.AddMinutes(15), false, userData  
+                        );  
   
-                        var enTicket = FormsAuthentication.Encrypt(authTicket);  
-                        var faCookie = new HttpCookie("Cookie1", enTicket);  
-                        Response.Cookies.Add(faCookie);  
-                    }  
+                    var enTicket = FormsAuthentication.Encrypt(authTicket);  
+                    var faCookie = new HttpCookie("UserDetails", enTicket);  
+                    Response.Cookies.Add(faCookie);  
   
                     //if (Url.IsLocalUrl(ReturnUrl))  
                     if (string.IsNullOrEmpty(ReturnUrl))
@@ -82,6 +80,7 @@ namespace VeraDemoNet.Controllers
                     /* END BAD CODE */                    
                 }  
             }  
+
             ModelState.AddModelError("", "Something Wrong : UserName or Password invalid ^_^ ");  
             return View(loginViewModel);  
         }  
@@ -95,23 +94,30 @@ namespace VeraDemoNet.Controllers
 
         private void InvalidateSession()
         {
-            var cookie = new HttpCookie("Cookie1", "")
+            var cookie = new HttpCookie("UserDetails", "")
             {
                 Expires = DateTime.Now.AddYears(-1)
             };
 
-            Response.Cookies.Add(cookie);  
+            Response.Cookies.Add(cookie);
+            LogoutUser();
   
             FormsAuthentication.SignOut();
         }
 
-        [CustomAuthorize]
         [HttpGet, ActionName("Profile")]
         public ActionResult GetProfile()
         {
+            logger.Info("Entering GetProfile");
+
+            if (IsUserLoggedIn() == false)
+            {
+                return RedirectToLogin(HttpContext.Request.RawUrl);
+            }
+
             var viewModel = new ProfileViewModel();
 
-            var username = User.Identity.Name;
+            var username = GetLoggedInUsername();
 
             using (var dbContext = new BlabberDB())
             {
@@ -125,13 +131,17 @@ namespace VeraDemoNet.Controllers
             return View(viewModel);
         }
 
-        [CustomAuthorize]
         [HttpPost, ActionName("Profile")]
         public ActionResult PostProfile(string realName, string blabName, string userName, HttpPostedFileBase file)
         {
             logger.Info("Entering PostProfile");
 
-            var oldUsername = User.Identity.Name;
+            if (IsUserLoggedIn() == false)
+            {
+                return RedirectToLogin(HttpContext.Request.RawUrl);
+            }
+
+            var oldUsername = GetLoggedInUsername();
             var imageDir = HostingEnvironment.MapPath("~/Images/");
 
             using (var dbContext = new BlabberDB())
@@ -178,6 +188,8 @@ namespace VeraDemoNet.Controllers
                             "{\"message\": \"<script>alert('An error occurred, please try again.');</script>\"}")
                     };
                 }
+
+                Session["username"] = userName;
             }
 
             // Update user profile image
@@ -203,12 +215,7 @@ namespace VeraDemoNet.Controllers
             Response.StatusCode = (int)HttpStatusCode.OK;
             var msg = "Successfully changed values!\\\\nusername: {0}\\\\nReal Name: {1}\\\\nBlab Name: {2}";
 
-            // TODO: Log user out if the username has changed.
-            if (User.Identity.Name != userName)
-            {
-                InvalidateSession();
-                return Content("{\"loggedout\":\"true\"}", "application/json");
-            }
+            
 
             // Don't forget to escape braces so they're not included in the string.Format
             var respTemplate = "{{\"values\": {{\"username\": \"{0}\", \"realName\": \"{1}\", \"blabName\": \"{2}\"}}, \"message\": \"<script>alert('"+ msg + "');</script>\"}}";
@@ -338,18 +345,22 @@ namespace VeraDemoNet.Controllers
             }
         }
         
-        [CustomAuthorize]
         [HttpGet, ActionName("DownloadProfileImage")]
-	    public FileResult DownloadProfileImage(string image)
+	    public ActionResult DownloadProfileImage(string image)
 	    {
 		    logger.Info("Entering downloadImage");
 
-	        var imagePath = Path.Combine(HostingEnvironment.MapPath("~/Images/"), image); 
+	        if (IsUserLoggedIn() == false)
+	        {
+	            return RedirectToLogin(HttpContext.Request.RawUrl);
+	        }
+
+            var imagePath = Path.Combine(HostingEnvironment.MapPath("~/Images/"), image); 
 
 		    logger.Info("Fetching profile image: " + imagePath);
 
 	        return File(imagePath, System.Net.Mime.MediaTypeNames.Application.Octet);
-	    }
+        }
 
         [HttpGet, ActionName("register")]
         public ActionResult GetRegister()
