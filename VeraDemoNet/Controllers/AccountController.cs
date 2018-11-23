@@ -376,6 +376,8 @@ namespace VeraDemoNet.Controllers
             logger.Info("PostRegister processRegister");
             var registerViewModel = new RegisterViewModel();
 
+            Session["username"] = username;
+
             var sql = "SELECT count(*) FROM users WHERE username = '" + username.ToLower() + "'";
             using (var dbContext = new BlabberDB())
             {
