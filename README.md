@@ -78,4 +78,4 @@ See the `docs` folder
 * cwe-134-format-string-injection
 * cwe-384-session-fixation
 * cwe-501-trust-boundary-violation [Note - may not be applicable to .NET]
-* cwe-502-deserialization-of-untrusted-data
+
