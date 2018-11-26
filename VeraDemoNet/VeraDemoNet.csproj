@@ -175,6 +175,7 @@
     <Compile Include="Controllers\BlabController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ResetController.cs" />
+    <Compile Include="Helper\UserSerializeHelper.cs" />
     <Compile Include="Models\BlabSearchResultViewModel.cs" />
     <Compile Include="Models\SearchBlabsViewModel.cs" />
     <Compile Include="HtmlHelpers\MenuSelectedHelper.cs" />

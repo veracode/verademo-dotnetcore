@@ -1,5 +1,8 @@
-﻿namespace VeraDemoNet.Models
+﻿using System;
+
+namespace VeraDemoNet.Models
 {
+    [Serializable]
     public class CustomSerializeModel
     {
         public int UserId { get; set; }

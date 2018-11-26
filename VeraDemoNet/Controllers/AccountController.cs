@@ -6,13 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Text;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
-using System.Web.Security;
 using Newtonsoft.Json;
 using VeraDemoNet.DataAccess;
+using VeraDemoNet.Helper;
 using VeraDemoNet.Models;
 
 namespace VeraDemoNet.Controllers  
@@ -33,7 +34,25 @@ namespace VeraDemoNet.Controllers
             if (IsUserLoggedIn())
             {  
                 return GetLogOut();  
-            }  
+            }
+
+
+            // TODO - implement CWE 502 - https://github.com/pwntester/ysoserial.net
+            var serializedUserDetails = UserSerializeHelper.CreateFromRequest(Request, logger);
+            if (serializedUserDetails != null)
+            {
+                Session["username"] = serializedUserDetails.UserName;
+
+                //if (Url.IsLocalUrl(ReturnUrl))  
+                if (string.IsNullOrEmpty(ReturnUrl))
+                {
+                    return RedirectToAction("Feed", "Blab");
+                }
+
+                /* START BAD CODE */
+                return Redirect(ReturnUrl);
+                /* END BAD CODE */
+            }
 
             ViewBag.ReturnUrl = ReturnUrl;  
             return View();  
@@ -42,34 +61,25 @@ namespace VeraDemoNet.Controllers
         [HttpPost, ActionName("Login")]  
         public ActionResult PostLogin(LoginView loginViewModel, string ReturnUrl = "")  
         {
-
             logger.Info("Entering PostLogin with username " + loginViewModel.UserName + " and target " + ReturnUrl);
 
             if (ModelState.IsValid)
             {
                 var userDetails = LoginUser(loginViewModel.UserName, loginViewModel.Password);
 
-
-                // TODO
-                if (userDetails!=null)  
+                if (userDetails!=null && loginViewModel.RememberLogin)  
                 {
-                    CustomSerializeModel userModel = new Models.CustomSerializeModel()  
+                    // TODO CWE 502 here if the 'remember me' checkbox is ticked.
+
+                    var userModel = new CustomSerializeModel()  
                     {  
                         UserName = userDetails.UserName,
                         BlabName = userDetails.BlabName,
                         RealName = userDetails.RealName
-                    };  
-  
-                    var userData = JsonConvert.SerializeObject(userModel);  
-                    var authTicket = new FormsAuthenticationTicket  
-                        (  
-                        1, loginViewModel.UserName, DateTime.Now, DateTime.Now.AddMinutes(15), false, userData  
-                        );  
-  
-                    var enTicket = FormsAuthentication.Encrypt(authTicket);  
-                    var faCookie = new HttpCookie("UserDetails", enTicket);  
-                    Response.Cookies.Add(faCookie);  
-  
+                    };
+
+                    UserSerializeHelper.UpdateResponse(Response, logger, userModel);
+                  
                     //if (Url.IsLocalUrl(ReturnUrl))  
                     if (string.IsNullOrEmpty(ReturnUrl))
                     {
@@ -89,21 +99,16 @@ namespace VeraDemoNet.Controllers
         [HttpGet, ActionName("Logout")]
         public ActionResult GetLogOut()
         {
-            InvalidateSession();
-            return Redirect(Url.Action("Login", "Account"));
-        }
-
-        private void InvalidateSession()
-        {
             var cookie = new HttpCookie("UserDetails", "")
             {
                 Expires = DateTime.Now.AddYears(-1)
             };
 
             Response.Cookies.Add(cookie);
+
             LogoutUser();
-  
-            FormsAuthentication.SignOut();
+            
+            return Redirect(Url.Action("Login", "Account"));
         }
 
         [HttpGet, ActionName("Profile")]

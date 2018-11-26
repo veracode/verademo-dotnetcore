@@ -10,5 +10,6 @@ namespace VeraDemoNet.Models
         [Display(Name = "Password")]
         public string Password { get; set; }
         public string ReturnURL { get; set; }
+        public bool RememberLogin { get; set; }
     }
 }
