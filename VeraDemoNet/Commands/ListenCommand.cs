@@ -15,28 +15,46 @@ namespace VeraDemoNet.Commands
 
         public void Execute(string blabberUsername)
         {
-            var sqlQuery = "INSERT INTO listeners (blabber, listener, status) values (@blabber, @listener, 'Active');";
-            logger.Info(sqlQuery);
+            var listenerInsertQuery = "INSERT INTO listeners (blabber, listener, status) values (@blabber, @listener, 'Active');";
+            logger.Info(listenerInsertQuery);
 
-            var action = connect.CreateCommand();
-            action.CommandText = sqlQuery;
-            action.Parameters.Add(new SqlParameter{ ParameterName = "@blabber", Value = blabberUsername});
-            action.Parameters.Add(new SqlParameter{ ParameterName = "@listener", Value = username});
-            action.ExecuteNonQuery();
+            using (var action = connect.CreateCommand())
+            {
 
-            sqlQuery = "SELECT blab_name FROM users WHERE username = '" + blabberUsername + "'";
-            var sqlStatement = connect.CreateCommand();
-            sqlStatement.CommandText = sqlQuery;
-            logger.Info(sqlQuery);
-            var result = sqlStatement.ExecuteReader();
-            result.NextResult();
+                action.CommandText = listenerInsertQuery;
+                action.Parameters.Add(new SqlParameter {ParameterName = "@blabber", Value = blabberUsername});
+                action.Parameters.Add(new SqlParameter {ParameterName = "@listener", Value = username});
+                action.ExecuteNonQuery();
+            }
+
+            var blabNameQuery = "SELECT blab_name FROM users WHERE username = @username";
+            logger.Info(blabNameQuery);
+            string blabberName;
+
+            using (var sqlStatement = connect.CreateCommand())
+            {
+                sqlStatement.CommandText = blabNameQuery;
+                sqlStatement.Parameters.Add(new SqlParameter { ParameterName = "@username", Value = blabberUsername });
+
+                using (var result = sqlStatement.ExecuteReader())
+                {
+                    result.Read();
+                    blabberName = result.GetString((0));
+                }
+            }
+
             
             /* START BAD CODE */
-            var listeningEvent = username + " started listening to " + blabberUsername + "(" + result.GetString(0) + ")";
-            sqlQuery = "INSERT INTO users_history (blabber, event) VALUES (\"" + username + "\", \"" + listeningEvent + "\")";
-            logger.Info(sqlQuery);
-            sqlStatement.CommandText = sqlQuery;
-            sqlStatement.ExecuteNonQuery();
+            var listeningEvent = username + " started listening to " + blabberUsername + "(" + blabberName + ")";
+            var eventQuery = "INSERT INTO users_history (blabber, event) VALUES ('" + username + "', '" + listeningEvent + "')";
+
+            using (var sqlStatement = connect.CreateCommand())
+            {
+                logger.Info(eventQuery);
+                sqlStatement.CommandText = eventQuery;
+                sqlStatement.ExecuteNonQuery();
+            }
+
             /* END BAD CODE */
         }
     }
