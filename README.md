@@ -77,6 +77,5 @@ See the `docs` folder
 * cwe-113-http-response-splitting
 * cwe-134-format-string-injection
 * cwe-384-session-fixation
-* cwe-501-trust-boundary-violation
+* cwe-501-trust-boundary-violation [Note - may not be applicable to .NET]
 * cwe-502-deserialization-of-untrusted-data
-* cwe-89-second-order-sql-injection
