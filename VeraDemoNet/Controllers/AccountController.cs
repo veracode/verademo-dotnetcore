@@ -379,13 +379,14 @@ namespace VeraDemoNet.Controllers
 
             Session["username"] = username;
 
-            var sql = "SELECT count(*) FROM users WHERE username = '" + username.ToLower() + "'";
+            var sql = "SELECT count(*) FROM users WHERE username = @username";
             using (var dbContext = new BlabberDB())
             {
                 var connection = dbContext.Database.Connection;
                 connection.Open();
                 var checkUsername = connection.CreateCommand();
                 checkUsername.CommandText = sql;
+                checkUsername.Parameters.Add(new SqlParameter {ParameterName = "@username", Value = username.ToLower()});
 
                 var numUsernames = checkUsername.ExecuteScalar() as int?;
 
@@ -494,30 +495,25 @@ namespace VeraDemoNet.Controllers
             user.Password = Md5Hash(user.Password);
             user.CreatedAt = DateTime.Now;
             
-            /* START BAD CODE */
-            // Execute the query
             using (var dbContext = new BlabberDB())
             {
                 var connect = dbContext.Database.Connection;
                 connect.Open();
 
-                var query = new StringBuilder();
-                query.Append("insert into users (username, password, created_at, real_name, blab_name) values(");
-                query.Append("'" + user.UserName + "',");
-                query.Append("'" + user.Password + "',");
-                query.Append("SYSDATETIME(),");
-                query.Append("'" + user.RealName + "',");
-                query.Append("'" + user.BlabName + "'");
-                query.Append(");");
-
+                var query = "insert into users (username, password, created_at, real_name, blab_name) values(@username, @password, SYSDATETIME(), @realname, @blabname)";
+                
                 using (var update = connect.CreateCommand())
                 {
                     logger.Info("Preparing the Prepared Statement: " + query);
-                    update.CommandText = query.ToString();
+                    update.CommandText = query;
+                    update.Parameters.Add(new SqlParameter { ParameterName = "@username", Value = user.UserName });
+                    update.Parameters.Add(new SqlParameter { ParameterName = "@password", Value = user.Password });
+                    update.Parameters.Add(new SqlParameter { ParameterName = "@realname", Value = user.RealName });
+                    update.Parameters.Add(new SqlParameter { ParameterName = "@blabname", Value = user.BlabName });
+
                     update.ExecuteNonQuery();
                 }
             }
-            /* END BAD CODE */
 
             //EmailUser(userName);
 
