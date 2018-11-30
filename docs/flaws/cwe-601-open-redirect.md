@@ -13,7 +13,7 @@ Exploit
 
 Mitigate
 --------
-Verify the redirect destination stays within the current application space.
+Verify the redirect destination stays within the current application space. (eg Url.IsLocalUrl(ReturnUrl))
 Use a whitelist to validate the target parameter before returning it.
 
 Remediate
