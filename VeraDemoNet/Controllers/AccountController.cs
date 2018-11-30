@@ -36,8 +36,6 @@ namespace VeraDemoNet.Controllers
                 return GetLogOut();  
             }
 
-
-            // TODO - implement CWE 502 - https://github.com/pwntester/ysoserial.net
             var serializedUserDetails = UserSerializeHelper.CreateFromRequest(Request, logger);
             if (serializedUserDetails != null)
             {
@@ -69,8 +67,6 @@ namespace VeraDemoNet.Controllers
 
                 if (userDetails!=null && loginViewModel.RememberLogin)  
                 {
-                    // TODO CWE 502 here if the 'remember me' checkbox is ticked.
-
                     var userModel = new CustomSerializeModel()  
                     {  
                         UserName = userDetails.UserName,
@@ -79,18 +75,17 @@ namespace VeraDemoNet.Controllers
                     };
 
                     UserSerializeHelper.UpdateResponse(Response, logger, userModel);
-                  
-                    //if (Url.IsLocalUrl(ReturnUrl))  
-                    if (string.IsNullOrEmpty(ReturnUrl))
-                    {
-                        return RedirectToAction("Feed", "Blab");
-                    }
+                }
 
-                    /* START BAD CODE */
-                    return Redirect(ReturnUrl);
-                    /* END BAD CODE */                    
-                }  
-            }  
+                if (string.IsNullOrEmpty(ReturnUrl))
+                {
+                    return RedirectToAction("Feed", "Blab");
+                }
+
+                /* START BAD CODE */
+                return Redirect(ReturnUrl);
+                /* END BAD CODE */
+            }
 
             ModelState.AddModelError("", "Something Wrong : UserName or Password invalid ^_^ ");  
             return View(loginViewModel);  

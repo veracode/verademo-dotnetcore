@@ -32,6 +32,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "artifacts", "artifacts", "{
 		docs\artifacts\cwe-73-payload.html = docs\artifacts\cwe-73-payload.html
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "yoserial.net", "yoserial.net", "{5211E1F9-0D95-4B79-AE3A-EF9B4C3E3EA5}"
+	ProjectSection(SolutionItems) = preProject
+		docs\artifacts\ysoserial.net\fastjson.dll = docs\artifacts\ysoserial.net\fastjson.dll
+		docs\artifacts\ysoserial.net\NDesk.Options.dll = docs\artifacts\ysoserial.net\NDesk.Options.dll
+		docs\artifacts\ysoserial.net\Newtonsoft.Json.dll = docs\artifacts\ysoserial.net\Newtonsoft.Json.dll
+		docs\artifacts\ysoserial.net\Newtonsoft.Json.xml = docs\artifacts\ysoserial.net\Newtonsoft.Json.xml
+		docs\artifacts\ysoserial.net\System.Management.Automation.dll = docs\artifacts\ysoserial.net\System.Management.Automation.dll
+		docs\artifacts\ysoserial.net\YamlDotNet.dll = docs\artifacts\ysoserial.net\YamlDotNet.dll
+		docs\artifacts\ysoserial.net\YamlDotNet.xml = docs\artifacts\ysoserial.net\YamlDotNet.xml
+		docs\artifacts\ysoserial.net\ysoserial.exe = docs\artifacts\ysoserial.net\ysoserial.exe
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +61,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0F2037C7-D998-4032-A4F6-0678C0A806EF} = {A87EBCF8-9096-49EE-A199-950EB545DAF0}
 		{50687040-E907-4D7A-BF96-2B0BBE7D7F01} = {A87EBCF8-9096-49EE-A199-950EB545DAF0}
+		{5211E1F9-0D95-4B79-AE3A-EF9B4C3E3EA5} = {50687040-E907-4D7A-BF96-2B0BBE7D7F01}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0922A26B-6A25-469A-8AF5-2F556C33C59E}
