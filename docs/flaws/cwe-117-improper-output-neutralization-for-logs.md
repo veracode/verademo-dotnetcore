@@ -14,7 +14,7 @@ an administrator part of the application.
 
 Exploit
 -------
-1. Go to `/login?target=%0D%0AINFO%20%20This%20has%20been%20injected`
+1. Go to `/login?ReturnUrl=%0D%0AINFO%20%20This%20has%20been%20injected`
 2. Observe that "INFO  This has been injected" has been added to the logs.
 
 Mitigation
