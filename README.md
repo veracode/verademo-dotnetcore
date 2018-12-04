@@ -80,4 +80,3 @@ See the `docs` folder
 
 ## Specific to .NET - possibly to implement (but bear in mind resourcing on supporting course notes)
 * cwe-80 based on inadvertant exposure of public method in a controller. All controller methods are publicly accessible via get/set so look at converting to private/protected or use the [NonAction] attribute
-* 
