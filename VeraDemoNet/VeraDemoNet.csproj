@@ -182,10 +182,6 @@
     <Compile Include="Models\RegisterViewModel.cs" />
     <Compile Include="Models\ResetViewModel.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
-    <Compile Include="CustomAuthentication\CustomAuthorizeAttribute.cs" />
-    <Compile Include="CustomAuthentication\CustomMembership.cs" />
-    <Compile Include="CustomAuthentication\CustomMembershipUser.cs" />
-    <Compile Include="CustomAuthentication\CustomPrincipal.cs" />
     <Compile Include="DataAccess\BlabberDB.cs" />
     <Compile Include="DataAccess\User.cs" />
     <Compile Include="Global.asax.cs">

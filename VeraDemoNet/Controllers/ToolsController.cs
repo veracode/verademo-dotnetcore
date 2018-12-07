@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Text;
 using System.Web.Hosting;
 using System.Web.Mvc;
-using VeraDemoNet.CustomAuthentication;
 using VeraDemoNet.Models;
 
 namespace VeraDemoNet.Controllers

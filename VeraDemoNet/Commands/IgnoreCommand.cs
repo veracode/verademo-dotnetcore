@@ -37,6 +37,8 @@ namespace VeraDemoNet.Commands
 
             sqlStatement.CommandText = sqlQuery;
 
+            /* END BAD CODE */
+
             logger.Info(sqlQuery);
             sqlStatement.ExecuteNonQuery();
         }

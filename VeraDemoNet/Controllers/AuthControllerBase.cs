@@ -2,7 +2,6 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Mvc;
-using System.Web.Security;
 using VeraDemoNet.DataAccess;
 
 namespace VeraDemoNet.Controllers
@@ -40,7 +39,6 @@ namespace VeraDemoNet.Controllers
         protected void LogoutUser()
         {
             Session["username"] = null;
-            FormsAuthentication.SignOut();
         }
 
         protected bool IsUserLoggedIn()

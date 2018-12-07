@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Reflection;
 using System.Text.RegularExpressions;
