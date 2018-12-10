@@ -52,6 +52,8 @@ namespace VeraDemoNet.Controllers
                 /* END BAD CODE */
             }
 
+            Session["username"] = "";
+
             ViewBag.ReturnUrl = ReturnUrl;  
             return View();  
         }  
