@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "flaws", "flaws", "{0F2037C7
 		docs\flaws\cwe-117-improper-output-neutralization-for-logs.md = docs\flaws\cwe-117-improper-output-neutralization-for-logs.md
 		docs\flaws\cwe-200-information-exposure.md = docs\flaws\cwe-200-information-exposure.md
 		docs\flaws\cwe-327-broken-crypto.md = docs\flaws\cwe-327-broken-crypto.md
+		docs\flaws\cwe-384-session-fixation.md = docs\flaws\cwe-384-session-fixation.md
 		docs\flaws\cwe-470-unsafe-reflection.md = docs\flaws\cwe-470-unsafe-reflection.md
 		docs\flaws\cwe-502-deserialization-of-untrusted-data.md = docs\flaws\cwe-502-deserialization-of-untrusted-data.md
 		docs\flaws\cwe-601-open-redirect.md = docs\flaws\cwe-601-open-redirect.md
