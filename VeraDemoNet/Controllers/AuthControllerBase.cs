@@ -21,7 +21,6 @@ namespace VeraDemoNet.Controllers
                     "select username, real_name as realname, blab_name as blabname, is_admin as isadmin from users where username ='"
                     + userName + "' and password='" + Md5Hash(passWord) + "';").ToList();
 
-                Session.Abandon();
                 if (found.Count != 0)
                 {
                     Session["username"] = userName;
