@@ -10,7 +10,7 @@ namespace VeraDemoNet.DataAccess
         const string PASSWORD = "admin123";
         const string OPTIONS = "Integrated Security=True;User Instance=False";
 
-        public BlabberDB() : base($"Data Source={DATA_SOURCE};AttachDbFilename={DB_FILENAME};Login={LOGIN};Password={PASSWORD};{OPTIONS}")  
+        public BlabberDB() : base($"Data Source={DATA_SOURCE};AttachDbFilename={DB_FILENAME};User Id={LOGIN};Password={PASSWORD};{OPTIONS}")  
         {  
         }  
   
