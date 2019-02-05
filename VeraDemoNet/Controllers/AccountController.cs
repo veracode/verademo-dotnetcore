@@ -8,7 +8,9 @@ using System.Net;
 using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
+using System.Web.ModelBinding;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Newtonsoft.Json;
 using VeraDemoNet.DataAccess;
 using VeraDemoNet.Helper;
@@ -27,7 +29,7 @@ namespace VeraDemoNet.Controllers
         }
 
         [HttpGet, ActionName("Login")]  
-        public ActionResult GetLogin(string ReturnUrl = "")
+        public ActionResult GetLogin(string ReturnUrl = "", string Message = "")
         {  
             logger.Info("Login page visited: " + ReturnUrl);
 
@@ -54,7 +56,8 @@ namespace VeraDemoNet.Controllers
 
             Session["username"] = "";
 
-            ViewBag.ReturnUrl = ReturnUrl;  
+            ViewBag.ReturnUrl = ReturnUrl;
+            ViewBag.Message = string.IsNullOrWhiteSpace(Message)? "Please provide your username and password to login to Blab-a-Gag":Message;
             return View();  
         }  
   
@@ -67,16 +70,20 @@ namespace VeraDemoNet.Controllers
             {
                 var userDetails = LoginUser(loginViewModel.UserName, loginViewModel.Password);
 
-                if (userDetails!=null && loginViewModel.RememberLogin)  
+                if (userDetails != null && loginViewModel.RememberLogin)
                 {
-                    var userModel = new CustomSerializeModel()  
-                    {  
+                    var userModel = new CustomSerializeModel()
+                    {
                         UserName = userDetails.UserName,
                         BlabName = userDetails.BlabName,
                         RealName = userDetails.RealName
                     };
 
                     UserSerializeHelper.UpdateResponse(Response, logger, userModel);
+                }
+                else
+                {
+                    ViewBag.Message = "Something Wrong : UserName or Password invalid ^_^ ";
                 }
 
                 if (string.IsNullOrEmpty(ReturnUrl))
@@ -89,8 +96,8 @@ namespace VeraDemoNet.Controllers
                 /* END BAD CODE */
             }
 
-            ModelState.AddModelError("", "Something Wrong : UserName or Password invalid ^_^ ");  
-            return View(loginViewModel);  
+
+            return RedirectToAction("Login", new RouteValueDictionary(new { controller = "Account", action = "Login", Message = "<div style='color:red'>Something Wrong : UserName or Password invalid ^_^</div>" }));
         }  
  
         [HttpGet, ActionName("Logout")]
