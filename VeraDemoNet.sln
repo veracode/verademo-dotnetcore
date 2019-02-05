@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "flaws", "flaws", "{0F2037C7
 		docs\flaws\cwe-100-technology-specific-input-validation-problems.md = docs\flaws\cwe-100-technology-specific-input-validation-problems.md
 		docs\flaws\cwe-117-improper-output-neutralization-for-logs.md = docs\flaws\cwe-117-improper-output-neutralization-for-logs.md
 		docs\flaws\cwe-200-information-exposure.md = docs\flaws\cwe-200-information-exposure.md
+		docs\flaws\cwe-259-hardcoded-password.md = docs\flaws\cwe-259-hardcoded-password.md
 		docs\flaws\cwe-327-broken-crypto.md = docs\flaws\cwe-327-broken-crypto.md
 		docs\flaws\cwe-384-session-fixation.md = docs\flaws\cwe-384-session-fixation.md
 		docs\flaws\cwe-470-unsafe-reflection.md = docs\flaws\cwe-470-unsafe-reflection.md
