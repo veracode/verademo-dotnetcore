@@ -165,14 +165,3 @@ blockquote footer {
 blockquote cite:before {
     content: "\2013";
 }
-
-ul#menu li.selected a {
-    background-color: #034af3;
-    color: #e8eef4;
-}
-
-input,
-select,
-textarea {
-    max-width: 280px;
-}
