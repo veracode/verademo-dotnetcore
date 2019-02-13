@@ -7,26 +7,24 @@
     @Styles.Render("~/Content/css")
 </head>
 <body role="document">
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="header">
-                <ul class="nav nav-pills pull-right" id="menu">
-                    <li class="@Html.ActivePage("Blab", "Feed")" role="presentation">@Html.ActionLink("Feed", "Feed", "Blab")</li>
-                    <li class="@Html.ActivePage("Blab", "Blabbers")" role="presentation">@Html.ActionLink("Blabbers", "Blabbers", "Blab")</li>
-                    <li class="@Html.ActivePage("Blab", "SearchBlabs")" role="presentation">@Html.ActionLink("Search", "SearchBlabs", "Blab")</li>
-                    <li class="@Html.ActivePage("Account", "Profile")" role="presentation">@Html.ActionLink("Profile", "Profile", "Account")</li>
-                    <li class="@Html.ActivePage("Tools", "Tools")" role="presentation">@Html.ActionLink("Tools", "Tools", "Tools")</li>
-                    <li class="@Html.ActivePage("Account", "LogOut")" role="presentation">@Html.ActionLink("Logout", "LogOut", "Account")</li>
+    <div class="container">
+        <div class="header clearfix">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li class="@(Html.ActivePage("Blab", "Feed") == "selected" ? "active" : "")" role="presentation">@Html.ActionLink("Feed", "Feed", "Blab")</li>
+                    <li class="@(Html.ActivePage("Blab", "Blabbers") == "selected" ? "active" : "")" role="presentation">@Html.ActionLink("Blabbers", "Blabbers", "Blab")</li>
+                    <li class="@(Html.ActivePage("Blab", "SearchBlabs") == "selected" ? "active" : "")" role="presentation">@Html.ActionLink("Search", "SearchBlabs", "Blab")</li>
+                    <li class="@(Html.ActivePage("Account", "Profile") == "selected" ? "active" : "")" role="presentation">@Html.ActionLink("Profile", "Profile", "Account")</li>
+                    <li class="@(Html.ActivePage("Tools", "Tools") == "selected" ? "active" : "")" role="presentation">@Html.ActionLink("Tools", "Tools", "Tools")</li>
+                    <li class="@(Html.ActivePage("Account", "LogOut") == "selected" ? "active" : "")" role="presentation">@Html.ActionLink("Logout", "LogOut", "Account")</li>
                 </ul>
-            </div>
+            </nav>
+            <img src="@(Url.Content("~/Images/Tokyoship_Talk_icon.svg"))" height="100"
+                 width="100">
         </div>
     </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - VeraDemo.Net - the home of Blab-a-Gag</p>
-        </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
