@@ -44,7 +44,7 @@
                                         <span class="date sub-text">by @(post.Author.BlabName) on @post.PostDateString</span>
                                         <br/>
                                         <span class="date sub-text">
-                                            <a href="blab?blabid=@post.Id">@(post.CommentCount) Comments </a>
+                                            <a href="@Url.Action("Blab", "Blab", new { blabId = post.Id } )">@(post.CommentCount) Comments </a>
                                         </span>
                                     </div>
                                 </div>
@@ -83,7 +83,7 @@
                                     <p class="">@Html.Raw(post.Content)</p>
                                     <span class="date sub-text">by you on @post.PostDateString</span><br />
                                     <span class="date sub-text">
-                                        <a href="blab?blabid=@post.Id">@post.CommentCount Comments</a>
+                                        <a href="@Url.Action("Blab", "Blab", new { blabId = post.Id } )">@post.CommentCount Comments</a>
                                     </span>
                                 </div>
                             </li>

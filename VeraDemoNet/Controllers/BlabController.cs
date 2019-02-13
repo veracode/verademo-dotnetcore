@@ -370,7 +370,7 @@ namespace VeraDemoNet.Controllers
                            "<div class='commentText'>" + 
                            "<p>{1}</p>" +
                            "<span class='date sub-text'>by {2} on {3}</span><br>" + 
-                           "<span class='date sub-text'><a href=\"blab?blabid={4}\">{5} Comments</a></span>" + 
+                           "<span class='date sub-text'><a href=\"Blab/Blab?blabid={4}\">{5} Comments</a></span>" + 
                            "</div>" + 
                            "</div></li>";
 
