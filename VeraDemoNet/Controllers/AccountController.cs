@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.ModelBinding;
@@ -23,6 +25,8 @@ namespace VeraDemoNet.Controllers
     {
         protected readonly log4net.ILog logger;
 
+        private const string COOKIE_NAME = "UserDetails";
+
         public AccountController()
         {
             logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);    
@@ -38,27 +42,49 @@ namespace VeraDemoNet.Controllers
                 return GetLogOut();  
             }
 
-            var serializedUserDetails = UserSerializeHelper.CreateFromRequest(Request, logger);
-            if (serializedUserDetails != null)
+
+            var userDetailsCookie = Request.Cookies[COOKIE_NAME];
+
+            if (userDetailsCookie == null || userDetailsCookie.Value.Length == 0)
             {
-                Session["username"] = serializedUserDetails.UserName;
+                logger.Info("No user cookie");
+                Session["username"] = "";
 
-                //if (Url.IsLocalUrl(ReturnUrl))  
-                if (string.IsNullOrEmpty(ReturnUrl))
-                {
-                    return RedirectToAction("Feed", "Blab");
-                }
-
-                /* START BAD CODE */
-                return Redirect(ReturnUrl);
-                /* END BAD CODE */
+                ViewBag.ReturnUrl = ReturnUrl;
+                ViewBag.Message = string.IsNullOrWhiteSpace(Message) ? "Please provide your username and password to login to Blab-a-Gag" : Message;
+                return View();
             }
 
-            Session["username"] = "";
+            logger.Info("User details were remembered");
+            var unencodedUserDetails = Convert.FromBase64String(userDetailsCookie.Value);
 
-            ViewBag.ReturnUrl = ReturnUrl;
-            ViewBag.Message = string.IsNullOrWhiteSpace(Message)? "Please provide your username and password to login to Blab-a-Gag":Message;
-            return View();  
+            CustomSerializeModel deserializedUser;
+
+            using (MemoryStream memoryStream = new MemoryStream(unencodedUserDetails))
+            {
+                var binaryFormatter = new BinaryFormatter();
+
+                // set memory stream position to starting point
+                memoryStream.Position = 0;
+
+                // Deserializes a stream into an object graph and return as a object.
+                /* START BAD CODE */
+                deserializedUser = binaryFormatter.Deserialize(memoryStream) as CustomSerializeModel;
+                /* END BAD CODE */
+                logger.Info("User details were retrieved for user: " + deserializedUser.UserName);
+            }
+
+            Session["username"] = deserializedUser.UserName;
+
+            //if (Url.IsLocalUrl(ReturnUrl))  
+            if (string.IsNullOrEmpty(ReturnUrl))
+            {
+                return RedirectToAction("Feed", "Blab");
+            }
+
+            /* START BAD CODE */
+            return Redirect(ReturnUrl);
+            /* END BAD CODE */
         }  
   
         [HttpPost, ActionName("Login")]  
@@ -79,7 +105,17 @@ namespace VeraDemoNet.Controllers
                         RealName = userDetails.RealName
                     };
 
-                    UserSerializeHelper.UpdateResponse(Response, logger, userModel);
+                    using (var userModelStream = new MemoryStream())
+                    {
+                        IFormatter formatter = new BinaryFormatter();
+                        formatter.Serialize(userModelStream, userModel);
+                        var faCookie =
+                            new HttpCookie(COOKIE_NAME, Convert.ToBase64String(userModelStream.GetBuffer()))
+                            {
+                                Expires = DateTime.Now.AddDays(30)
+                            };
+                        Response.Cookies.Add(faCookie);
+                    }
                 }
                 else
                 {

