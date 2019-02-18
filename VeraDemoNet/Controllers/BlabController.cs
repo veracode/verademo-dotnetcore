@@ -238,7 +238,7 @@ namespace VeraDemoNet.Controllers
             {
                 sort = "blab_name ASC";
             }
-            var username = User.Identity.Name;
+            var username = Session["username"] as string;
             
             var viewModel = PopulateBlabbersViewModel(sort, username);
 
