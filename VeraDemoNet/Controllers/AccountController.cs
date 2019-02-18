@@ -10,12 +10,10 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Web;
 using System.Web.Hosting;
-using System.Web.ModelBinding;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Newtonsoft.Json;
 using VeraDemoNet.DataAccess;
-using VeraDemoNet.Helper;
 using VeraDemoNet.Models;
 
 namespace VeraDemoNet.Controllers  
@@ -559,6 +557,9 @@ namespace VeraDemoNet.Controllers
                     update.ExecuteNonQuery();
                 }
             }
+
+            var imageDir = HostingEnvironment.MapPath("~/Images/");
+            System.IO.File.Copy(Path.Combine(imageDir, "default_profile.png"), Path.Combine(imageDir, user.UserName) + ".png");
 
             //EmailUser(userName);
 

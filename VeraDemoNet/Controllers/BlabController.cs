@@ -355,13 +355,8 @@ namespace VeraDemoNet.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetMoreBlabs(int start, int numResults)
+        public string GetMoreBlabs(int start, int numResults)
         {
-            if (IsUserLoggedIn() == false)
-            {
-                return RedirectToLogin(HttpContext.Request.RawUrl);
-            }
-
             var username = GetLoggedInUsername();
 
             var template = "<li><div><div class='commenterImage'>" +
@@ -399,7 +394,7 @@ namespace VeraDemoNet.Controllers
                 }
             }
 
-            return Content(returnTemplate.ToString());
+            return returnTemplate.ToString();
         }
 
         private BlabViewModel CreateBlabViewModel(int blabId)
