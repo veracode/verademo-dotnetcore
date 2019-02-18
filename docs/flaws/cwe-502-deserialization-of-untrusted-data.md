@@ -2,6 +2,8 @@ CWE-502: Deserialization of Untrusted Data in VeraDemo
 ======================================================
 
 VeraDemo does not make use of the Forms Encryption but instead implements its own approach.
+When a user elects to 'Rmemeber Me' on the login screen, a UserDetails cookie is created that includes serialized information
+about the user.
 
 You can find this in the ```VeraDemoNet.Controllers.AccountController``` class.
 This class has a method "PostLogin" which logs a user in and calls ```UserSerializeHelper.UpdateResponse```.
