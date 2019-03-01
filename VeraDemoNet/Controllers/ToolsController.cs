@@ -96,7 +96,7 @@ namespace VeraDemoNet.Controllers
                 var proc = CreateStdOutProcess(fileName, arguments);
 
                 proc.ErrorDataReceived += delegate(object sender, DataReceivedEventArgs e) { output.Append(e.Data); };
-                proc.OutputDataReceived += delegate(object sender, DataReceivedEventArgs e) { output.Append(e.Data); };
+                proc.OutputDataReceived += delegate(object sender, DataReceivedEventArgs e) { output.Append(e.Data + "\n"); };
 
                 proc.Start();
                 proc.BeginOutputReadLine();
@@ -110,7 +110,7 @@ namespace VeraDemoNet.Controllers
 
             return View("Tools", new ToolViewModel
             {
-               FortuneResult = output.ToString()
+                FortuneResult = output.ToString()
             });
         }
 
