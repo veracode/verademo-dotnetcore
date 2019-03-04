@@ -8,25 +8,23 @@
     <h4>Tools</h4>
 </div>
 <div></div>
+<form method="post" action="@Url.Action("tools")">
+    <div>
+        <p>Check the availability of a host here by pinging it. Example: google.com </p>
 
-<div>
-    <p>Check the availability of a host here by pinging it. Example: google.com </p>
-    <form method="post" action="@Url.Action("ping")">
         <label for="host">Host:</label>
         <input type="text" name="host"
                @{ if (Model.Host != null) { @Html.Raw("value= \"" + Model.Host + "\"")  } } />
         <input type="submit" value="Check" />
-    </form>
-    <pre>@Model.PingResult</pre>
-</div>
-<div>
-    <h5>Show a UNIX fortune from one of the 2 supported dictionaries.</h5>
-    <form method="post" action="@Url.Action("fortune")">
+        <pre>@Model.PingResult</pre>
+    </div>
+    <div>
+        <h5>Show a UNIX fortune from one of the 2 supported dictionaries.</h5>
         <select name="fortunefile">
             <option value="funny.txt">funny</option>
             <option value="offensive.txt">offensive</option>
-        </select> 
-        <input type="submit" value="Get a Fortune" />
-    </form>
-    <pre>@Model.FortuneResult</pre>
-</div>
+        </select>
+        <input type="submit" value="Change" />
+        <pre>@Model.FortuneResult</pre>
+    </div>
+</form>
