@@ -49,7 +49,7 @@ namespace VeraDemoNet.Controllers
                 Session["username"] = "";
 
                 ViewBag.ReturnUrl = ReturnUrl;
-                ViewBag.Message = string.IsNullOrWhiteSpace(Message) ? "Please provide your username and password to login to Blab-a-Gag" : Message;
+                ViewBag.Message = string.IsNullOrWhiteSpace(Message) ? "Please provide your username and password to login to Blab" : Message;
                 return View();
             }
 
@@ -90,48 +90,53 @@ namespace VeraDemoNet.Controllers
         {
             logger.Info("Entering PostLogin with username " + loginViewModel.UserName + " and target " + ReturnUrl);
 
-            if (ModelState.IsValid)
+            try
             {
-                var userDetails = LoginUser(loginViewModel.UserName, loginViewModel.Password);
-
-                if (userDetails != null && loginViewModel.RememberLogin)
+                if (ModelState.IsValid)
                 {
-                    var userModel = new CustomSerializeModel()
-                    {
-                        UserName = userDetails.UserName,
-                        BlabName = userDetails.BlabName,
-                        RealName = userDetails.RealName
-                    };
+                    var userDetails = LoginUser(loginViewModel.UserName, loginViewModel.Password);
 
-                    using (var userModelStream = new MemoryStream())
+                    if (userDetails != null && loginViewModel.RememberLogin)
                     {
-                        IFormatter formatter = new BinaryFormatter();
-                        formatter.Serialize(userModelStream, userModel);
-                        var faCookie =
-                            new HttpCookie(COOKIE_NAME, Convert.ToBase64String(userModelStream.GetBuffer()))
-                            {
-                                Expires = DateTime.Now.AddDays(30)
-                            };
-                        Response.Cookies.Add(faCookie);
+                        var userModel = new CustomSerializeModel()
+                        {
+                            UserName = userDetails.UserName,
+                            BlabName = userDetails.BlabName,
+                            RealName = userDetails.RealName
+                        };
+
+                        using (var userModelStream = new MemoryStream())
+                        {
+                            IFormatter formatter = new BinaryFormatter();
+                            formatter.Serialize(userModelStream, userModel);
+                            var faCookie =
+                                new HttpCookie(COOKIE_NAME, Convert.ToBase64String(userModelStream.GetBuffer()))
+                                {
+                                    Expires = DateTime.Now.AddDays(30)
+                                };
+                            Response.Cookies.Add(faCookie);
+                        }
                     }
-                }
-                else
-                {
-                    ViewBag.Message = "Something Wrong : UserName or Password invalid ^_^ ";
-                }
+                    else
+                    {
+                        ViewBag.Message = "Something Wrong : UserName or Password invalid ^_^ ";
+                    }
 
-                if (string.IsNullOrEmpty(ReturnUrl))
-                {
-                    return RedirectToAction("Feed", "Blab");
-                }
+                    if (string.IsNullOrEmpty(ReturnUrl))
+                    {
+                        return RedirectToAction("Feed", "Blab");
+                    }
 
-                /* START BAD CODE */
-                return Redirect(ReturnUrl);
-                /* END BAD CODE */
+                    /* START BAD CODE */
+                    return Redirect(ReturnUrl);
+                    /* END BAD CODE */
+                }
             }
-
-
-            return RedirectToAction("Login", new RouteValueDictionary(new { controller = "Account", action = "Login", Message = "<div style='color:red'>Something Wrong : UserName or Password invalid ^_^</div>" }));
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.Message;
+            }
+            return RedirectToAction("Login", new RouteValueDictionary(new { controller = "Account", action = "Login", Message = ViewBag.Message}));
         }  
  
         [HttpGet, ActionName("Logout")]
