@@ -29,7 +29,7 @@ namespace VeraDemoNet.Controllers
         }
 
         [HttpPost]
-        public ActionResult Ping(string host)
+        public ActionResult Tools(string host, string fortuneFile)
         {
             if (IsUserLoggedIn() == false)
             {
@@ -37,14 +37,23 @@ namespace VeraDemoNet.Controllers
             }
 
             var viewModel = new ToolViewModel();
+            viewModel.Host = host;
+            viewModel.PingResult = Ping(host);
+            viewModel.FortuneResult = Fortune(fortuneFile);
 
+            return View("Tools", viewModel);
+        }
+
+        private string Ping(string host)
+        {
             if (string.IsNullOrEmpty(host))
             {
-                return View("Tools", viewModel);
+                return "";
             }
 
             var output = new StringBuilder();
-            try {
+            try
+            {
                 // START BAD CODE
                 var fileName = "cmd.exe";
                 var arguments = "/c ping " + host;
@@ -52,33 +61,24 @@ namespace VeraDemoNet.Controllers
 
                 var proc = CreateStdOutProcess(fileName, arguments);
 
-                proc.ErrorDataReceived += delegate(object sender, DataReceivedEventArgs e) { output.AppendLine(e.Data); };
-                proc.OutputDataReceived += delegate(object sender, DataReceivedEventArgs e) { output.AppendLine(e.Data); };
+                proc.ErrorDataReceived += delegate (object sender, DataReceivedEventArgs e) { output.AppendLine(e.Data); };
+                proc.OutputDataReceived += delegate (object sender, DataReceivedEventArgs e) { output.AppendLine(e.Data); };
 
                 proc.Start();
                 proc.BeginOutputReadLine();
                 proc.BeginErrorReadLine();
                 proc.WaitForExit();
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 logger.Error(ex);
             }
 
-            viewModel.Host = host;
-            viewModel.PingResult = output.ToString();
-
-            return View("Tools", viewModel);
+            return output == null ? "" : output.ToString();
         }
 
-        [HttpPost]
-        public ActionResult Fortune(string fortuneFile)
+        private string Fortune(string fortuneFile)
         {
-            if (IsUserLoggedIn() == false)
-            {
-                return RedirectToLogin(HttpContext.Request.RawUrl);
-            }
-
             var output = new StringBuilder();
 
             if (string.IsNullOrEmpty(fortuneFile)) 
@@ -96,7 +96,7 @@ namespace VeraDemoNet.Controllers
                 var proc = CreateStdOutProcess(fileName, arguments);
 
                 proc.ErrorDataReceived += delegate(object sender, DataReceivedEventArgs e) { output.Append(e.Data); };
-                proc.OutputDataReceived += delegate(object sender, DataReceivedEventArgs e) { output.Append(e.Data); };
+                proc.OutputDataReceived += delegate(object sender, DataReceivedEventArgs e) { output.Append(e.Data + "\n"); };
 
                 proc.Start();
                 proc.BeginOutputReadLine();
@@ -107,11 +107,7 @@ namespace VeraDemoNet.Controllers
             {
                 logger.Error(ex);
             }
-
-            return View("Tools", new ToolViewModel
-            {
-               FortuneResult = output.ToString()
-            });
+            return output == null ? "" : output.ToString();
         }
 
         private static Process CreateStdOutProcess(string filename, string arguments)
