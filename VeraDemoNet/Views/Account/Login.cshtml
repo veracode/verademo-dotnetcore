@@ -14,7 +14,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">
-                    @ViewBag.Message
+                    Please provide your username and password to login to Blab
                 </h3>
             </div>
             <div class="panel-body">
@@ -26,11 +26,11 @@
                         <tr>
                             <td>Username</td>
                             <td>
-                    <div class="form-group">
-                        @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
-                        </div><a href="javascript:hint();">Hint</a>
-</td>
+                                <div class="form-group">
+                                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                                </div><a href="javascript:hint();">Hint</a>
+                            </td>
                         </tr>
                         <tr>
                             <td>Password</td>

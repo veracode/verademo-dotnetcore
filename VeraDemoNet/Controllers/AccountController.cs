@@ -30,14 +30,14 @@ namespace VeraDemoNet.Controllers
             logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);    
         }
 
-        [HttpGet, ActionName("Login")]  
-        public ActionResult GetLogin(string ReturnUrl = "", string Message = "")
-        {  
+        [HttpGet, ActionName("Login")]
+        public ActionResult GetLogin(string ReturnUrl = "")
+        {
             logger.Info("Login page visited: " + ReturnUrl);
 
             if (IsUserLoggedIn())
-            {  
-                return GetLogOut();  
+            {
+                return GetLogOut();
             }
 
 
@@ -49,7 +49,6 @@ namespace VeraDemoNet.Controllers
                 Session["username"] = "";
 
                 ViewBag.ReturnUrl = ReturnUrl;
-                ViewBag.Message = string.IsNullOrWhiteSpace(Message) ? "Please provide your username and password to login to Blab" : Message;
                 return View();
             }
 
@@ -83,10 +82,10 @@ namespace VeraDemoNet.Controllers
             /* START BAD CODE */
             return Redirect(ReturnUrl);
             /* END BAD CODE */
-        }  
-  
-        [HttpPost, ActionName("Login")]  
-        public ActionResult PostLogin(LoginView loginViewModel, string ReturnUrl = "")  
+        }
+
+        [HttpPost, ActionName("Login")]
+        public ActionResult PostLogin(LoginView loginViewModel, string ReturnUrl = "")
         {
             logger.Info("Entering PostLogin with username " + loginViewModel.UserName + " and target " + ReturnUrl);
 
@@ -96,7 +95,13 @@ namespace VeraDemoNet.Controllers
                 {
                     var userDetails = LoginUser(loginViewModel.UserName, loginViewModel.Password);
 
-                    if (userDetails != null && loginViewModel.RememberLogin)
+                    if (userDetails == null)
+                    {
+                        ModelState.AddModelError("CustomError", "Something Wrong : UserName or Password invalid ^_^ ");
+                        return View(loginViewModel);
+                    }
+
+                    if (loginViewModel.RememberLogin)
                     {
                         var userModel = new CustomSerializeModel()
                         {
@@ -117,10 +122,6 @@ namespace VeraDemoNet.Controllers
                             Response.Cookies.Add(faCookie);
                         }
                     }
-                    else
-                    {
-                        ViewBag.Message = "Something Wrong : UserName or Password invalid ^_^ ";
-                    }
 
                     if (string.IsNullOrEmpty(ReturnUrl))
                     {
@@ -134,11 +135,13 @@ namespace VeraDemoNet.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.Message = ex.Message;
+                ModelState.AddModelError("CustomError", ex.Message);
             }
-            return RedirectToAction("Login", new RouteValueDictionary(new { controller = "Account", action = "Login", Message = ViewBag.Message}));
-        }  
- 
+
+            return View(loginViewModel);
+
+        }
+
         [HttpGet, ActionName("Logout")]
         public ActionResult GetLogOut()
         {
@@ -564,7 +567,15 @@ namespace VeraDemoNet.Controllers
             }
 
             var imageDir = HostingEnvironment.MapPath("~/Images/");
-            System.IO.File.Copy(Path.Combine(imageDir, "default_profile.png"), Path.Combine(imageDir, user.UserName) + ".png");
+            try
+            {
+                System.IO.File.Copy(Path.Combine(imageDir, "default_profile.png"), Path.Combine(imageDir, user.UserName) + ".png");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
 
             //EmailUser(userName);
 
