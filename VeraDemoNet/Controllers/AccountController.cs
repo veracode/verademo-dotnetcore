@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -11,7 +12,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Newtonsoft.Json;
 using VeraDemoNet.DataAccess;
 using VeraDemoNet.Models;
@@ -87,13 +87,17 @@ namespace VeraDemoNet.Controllers
         [HttpPost, ActionName("Login")]
         public ActionResult PostLogin(LoginView loginViewModel, string ReturnUrl = "")
         {
-            logger.Info("Entering PostLogin with username " + loginViewModel.UserName + " and target " + ReturnUrl);
-
             try
             {
                 if (ModelState.IsValid)
                 {
                     var userDetails = LoginUser(loginViewModel.UserName, loginViewModel.Password);
+
+                    using (EventLog eventLog = new EventLog("Application"))
+                    {
+                        eventLog.Source = "VeraDemoNet";
+                        eventLog.WriteEntry("Entering PostLogin with target " + ReturnUrl + " and username " + loginViewModel.UserName, EventLogEntryType.Information, 101, 1);
+                    }
 
                     if (userDetails == null)
                     {
