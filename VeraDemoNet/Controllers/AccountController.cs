@@ -95,7 +95,7 @@ namespace VeraDemoNet.Controllers
 
                     using (EventLog eventLog = new EventLog("Application"))
                     {
-                        eventLog.Source = "VeraDemoNet";
+                        eventLog.Source = "Application";
                         eventLog.WriteEntry("Entering PostLogin with target " + ReturnUrl + " and username " + loginViewModel.UserName, EventLogEntryType.Information, 101, 1);
                     }
 
