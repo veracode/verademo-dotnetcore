@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace VeraDemoNet.DataAccess
 {
@@ -16,7 +18,7 @@ namespace VeraDemoNet.DataAccess
 
         public static User Create(string userName, string blabName, string realName, bool isAdmin = false)
         {
-            var password = userName;
+            var password = Md5Hash(userName);
             var createdAt = DateTime.Now;
 
             return new User(userName, password, createdAt, null, blabName, realName, isAdmin);
@@ -37,6 +39,27 @@ namespace VeraDemoNet.DataAccess
             BlabName = blabName;
             RealName = realName;
             IsAdmin = isAdmin;
+        }
+
+        protected static string Md5Hash(string input)
+        {
+            var sb = new StringBuilder();
+            if (string.IsNullOrEmpty(input))
+            {
+                return sb.ToString();
+            }
+
+            using (MD5 md5 = MD5.Create())
+            {
+                var retVal = md5.ComputeHash(Encoding.Unicode.GetBytes(input));
+
+                foreach (var t in retVal)
+                {
+                    sb.Append(t.ToString("x2"));
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }

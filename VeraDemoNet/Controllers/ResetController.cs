@@ -168,7 +168,6 @@ namespace VeraDemoNet.Controllers
             foreach (var user in _veraUsers)
             {
                 logger.Info("Adding user " + user.UserName);
-                user.Password = Md5Hash(user.Password);
                 context.Users.Add(user);
             }
             context.SaveChanges();
