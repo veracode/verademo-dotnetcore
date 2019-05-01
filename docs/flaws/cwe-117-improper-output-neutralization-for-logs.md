@@ -19,6 +19,7 @@ and Exploit #2 & #3 will work without this
 Exploit #1
 -------
 1. Go to `/login?ReturnUrl=%0D%0AINFO%20%20This%20has%20been%20injected`
+2. Note that an MVC redirection security issue will be generated. However, the user is logged in (confirmed by visiting /Profile)
 2. Observe that "INFO  This has been injected" has been added to the logs.
 
 Exploit #2
