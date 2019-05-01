@@ -271,11 +271,15 @@ namespace VeraDemoNet.Controllers
             Response.StatusCode = (int)HttpStatusCode.OK;
             var msg = "Successfully changed values!\\\\nusername: {0}\\\\nReal Name: {1}\\\\nBlab Name: {2}";
 
-            
+            /* START BAD CODE */
 
             // Don't forget to escape braces so they're not included in the string.Format
             var respTemplate = "{{\"values\": {{\"username\": \"{0}\", \"realName\": \"{1}\", \"blabName\": \"{2}\"}}, \"message\": \"<script>alert('"+ msg + "');</script>\"}}";
-            return Content(string.Format(respTemplate, userName.ToLower(), realName, blabName), "application/json");
+
+            // JSON doesn't like single backslashes so escape them?
+            return Content(string.Format(respTemplate, userName.ToLower().Replace("\\", "\\\\"), realName.Replace("\\", "\\\\"), blabName.Replace("\\", "\\\\")), "application/json");
+
+            /* END BAD CODE */
         }
 
         [HttpGet, ActionName("PasswordHint")]
