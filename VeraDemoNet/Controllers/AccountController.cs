@@ -556,22 +556,8 @@ namespace VeraDemoNet.Controllers
             
             using (var dbContext = new BlabberDB())
             {
-                var connect = dbContext.Database.Connection;
-                connect.Open();
-
-                var query = "insert into users (username, password, created_at, real_name, blab_name) values(@username, @password, SYSDATETIME(), @realname, @blabname)";
-                
-                using (var update = connect.CreateCommand())
-                {
-                    logger.Info("Preparing the Prepared Statement: " + query);
-                    update.CommandText = query;
-                    update.Parameters.Add(new SqlParameter { ParameterName = "@username", Value = user.UserName });
-                    update.Parameters.Add(new SqlParameter { ParameterName = "@password", Value = user.Password });
-                    update.Parameters.Add(new SqlParameter { ParameterName = "@realname", Value = user.RealName });
-                    update.Parameters.Add(new SqlParameter { ParameterName = "@blabname", Value = user.BlabName });
-
-                    update.ExecuteNonQuery();
-                }
+                dbContext.Users.Add(user);
+                dbContext.SaveChanges();
             }
 
             var imageDir = HostingEnvironment.MapPath("~/Images/");
