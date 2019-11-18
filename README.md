@@ -58,25 +58,3 @@ Install the AWS Toolkit for VS 2017 - https://aws.amazon.com/visualstudio/
 ## Exploitation Demos
 
 See the `docs` folder
-
-
-# TODO
-
-
-## Immediate:
-
-* Make it more easily deployable into Cloud Services (MS have lots of nice tools to help)
-* Test on Greenlight.
-
-## Ongoing:
-* Add a couple of 'legacy' ASPX pages so that Greenlight can be demoed on pages (it doesn't work on CSHTML) 
-* DOM based XSS to demonstrate Javascript-oriented flaw remedation
-* SourceClear/SCA demonstration through use of outdated/flaws 3rd party components
-
-## Missing from here, but in Verademo
-* cwe-113-http-response-splitting
-* cwe-134-format-string-injection
-* cwe-384-session-fixation
-
-## Specific to .NET - possibly to implement (but bear in mind resourcing on supporting course notes)
-* cwe-80 based on inadvertant exposure of public method in a controller. All controller methods are publicly accessible via get/set so look at converting to private/protected or use the [NonAction] attribute
