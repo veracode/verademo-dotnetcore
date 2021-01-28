@@ -58,8 +58,8 @@ namespace Verademo.Controllers
             try
             {
                 // START BAD CODE
-                var fileName = "cmd.exe";
-                var arguments = "/c ping " + host;
+                var fileName = "bash";
+                var arguments = "ping " + host;
                 // END BAD CODE
 
                 var proc = CreateStdOutProcess(fileName, arguments);
@@ -92,9 +92,8 @@ namespace Verademo.Controllers
             try
             {
                 // START BAD CODE
-                var fileName = "cmd.exe";
-                ;
-                var arguments = "/c " + Path.Combine(_environment.ContentRootPath, "Resources/bin/fortune-go.exe") + " " + Path.Combine(_environment.ContentRootPath, "Resources/bin/bin/" + fortuneFile);
+                var fileName = "bash";
+                var arguments = "/bin/fortune " + Path.Combine(_environment.ContentRootPath, "Resources/bin/bin/" + fortuneFile);
                 // END BAD CODE
 
                 var proc = CreateStdOutProcess(fileName, arguments);

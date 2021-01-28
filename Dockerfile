@@ -19,7 +19,7 @@ RUN ln -s /opt/mssql-tools/bin/sqlcmd /bin/ && /var/opt/mssql/data/configure.sh
 # https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu
 RUN apt-get update \
     && apt-get -y dist-upgrade \
-    && apt-get -y install apt-transport-https dotnet-sdk-3.1 fortune-mod \
+    && apt-get -y install apt-transport-https dotnet-sdk-3.1 fortune-mod iputils-ping \
     && ln -s /usr/games/fortune /bin/ \
     && rm -rf /var/lib/apt/lists/*
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
@@ -27,7 +27,7 @@ ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 COPY entrypoint.sh /
 
 WORKDIR /app
-COPY VeraDemoNet /app
+COPY app /app
 
 # Compile
 RUN dotnet publish -c debug -o /app/build /app
