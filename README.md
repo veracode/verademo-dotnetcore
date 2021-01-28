@@ -21,7 +21,7 @@ Blab-a-Gag is a fairly simple forum type application which allows:
 If you don't already have Docker this is a prerequisite.
 
 ```
-docker run --rm -it -p 127.0.0.1:8080:8080 antfie/verademo-netcore
+docker run --rm -it -p 127.0.0.1:8080:8080 antfie/verademo-dotnet
 ```
 
 Navigate to: http://127.0.0.1:8080
