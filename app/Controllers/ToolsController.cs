@@ -59,7 +59,7 @@ namespace Verademo.Controllers
             {
                 // START BAD CODE
                 var fileName = "bash";
-                var arguments = "ping " + host;
+                var arguments = "ping -c1 " + host;
                 // END BAD CODE
 
                 var proc = CreateStdOutProcess(fileName, arguments);
@@ -86,14 +86,14 @@ namespace Verademo.Controllers
 
             if (string.IsNullOrEmpty(fortuneFile)) 
             {
-                fortuneFile = "funny.txt";
+                fortuneFile = "literature";
             }
 
             try
             {
                 // START BAD CODE
                 var fileName = "bash";
-                var arguments = "/bin/fortune " + Path.Combine(_environment.ContentRootPath, "Resources/bin/bin/" + fortuneFile);
+                var arguments = "/bin/fortune " + fortuneFile;
                 // END BAD CODE
 
                 var proc = CreateStdOutProcess(fileName, arguments);

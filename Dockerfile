@@ -12,7 +12,7 @@ ENV ACCEPT_EULA=Y
 ENV MSSQL_PID=Express
 ENV SA_PASSWORD=SuperSecurePassw0rd!
 COPY db/* /var/opt/mssql/data/
-RUN ln -s /opt/mssql-tools/bin/sqlcmd /bin/ && /var/opt/mssql/data/configure.sh
+RUN ln -s /opt/mssql-tools/bin/sqlcmd /bin/ && chmod +x /var/opt/mssql/data/configure.sh && /var/opt/mssql/data/configure.sh
 
 # Install the ASP.NET Core 3.1 SDK as per
 # Also install the fortune-mod fortune game
