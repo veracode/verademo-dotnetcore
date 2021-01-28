@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace VeraDemoNet.Models
+namespace Verademo.Models
 {
     public class LoginView
     {

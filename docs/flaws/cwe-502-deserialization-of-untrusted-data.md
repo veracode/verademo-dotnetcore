@@ -5,12 +5,12 @@ VeraDemo does not make use of the Forms Encryption but instead implements its ow
 When a user elects to 'Rmemeber Me' on the login screen, a UserDetails cookie is created that includes serialized information
 about the user.
 
-You can find this in the ```VeraDemoNet.Controllers.AccountController``` class.
+You can find this in the ```Verademo.Controllers.AccountController``` class.
 This class has a method "PostLogin" which logs a user in and calls ```UserSerializeHelper.UpdateResponse```.
 This method serializes the User object and puts the result in a ```UserDetails``` cookie.
 
 Every time the code then needs the current user it fetches it with ```UserSerializeHelper.CreateFromRequest``` as it does
-in for example the ```GetLogin``` method in the ``VeraDemoNet.Controllers.AccountController``` class.
+in for example the ```GetLogin``` method in the ``Verademo.Controllers.AccountController``` class.
 
 This entrusts the browser with supplying serialized .NET code. As the deserialization process necessarily executed code
 this is in effect a constrained form of code injection. An attacker can be then abuse this by supplying carefully crafted 

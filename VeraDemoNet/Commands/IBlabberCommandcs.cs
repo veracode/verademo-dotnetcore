@@ -1,4 +1,4 @@
-﻿namespace VeraDemoNet.Commands
+﻿namespace Verademo.Commands
 {
     public interface IBlabberCommand
     {

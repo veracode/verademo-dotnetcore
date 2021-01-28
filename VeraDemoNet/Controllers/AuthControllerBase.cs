@@ -1,10 +1,13 @@
 ﻿using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web.Mvc;
-using VeraDemoNet.DataAccess;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Verademo.Data;
+using Verademo.Models;
 
-namespace VeraDemoNet.Controllers
+namespace Verademo.Controllers
 {
     public abstract class AuthControllerBase : Controller
     {
@@ -15,7 +18,7 @@ namespace VeraDemoNet.Controllers
                 return null;
             }
 
-            using (var dbContext = new BlabberDB())
+            using (var dbContext = new ApplicationDbContext())
             {
                 var found = dbContext.Database.SqlQuery<BasicUser>(
                     "select username, real_name as realname, blab_name as blabname, is_admin as isadmin from users where username ='"
@@ -23,7 +26,7 @@ namespace VeraDemoNet.Controllers
 
                 if (found.Count != 0)
                 {
-                    Session["username"] = userName;
+                    HttpContext.Session.SetString("username", userName);
                     return found[0];
                 }
             }
@@ -33,29 +36,28 @@ namespace VeraDemoNet.Controllers
 
         protected string GetLoggedInUsername()
         {
-            return Session["username"].ToString();
+            return HttpContext.Session.GetString("username");
         }
 
         protected void LogoutUser()
         {
-            Session["username"] = null;
+            HttpContext.Session.SetString("username", null);
         }
 
         protected bool IsUserLoggedIn()
         {
-            return string.IsNullOrEmpty(Session["username"] as string) == false;
-
+            return string.IsNullOrEmpty(HttpContext.Session.GetString("username")) == false;
         }
 
         protected RedirectToRouteResult RedirectToLogin(string targetUrl)
         {
             return new RedirectToRouteResult(
-                new System.Web.Routing.RouteValueDictionary
+                new RouteValueDictionary
                 (new
                 {
                     controller = "Account",
                     action = "Login",
-                    ReturnUrl = HttpContext.Request.RawUrl
+                    ReturnUrl = HttpContext.Request.QueryString
                 }));
         }
 

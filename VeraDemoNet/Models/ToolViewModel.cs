@@ -1,4 +1,4 @@
-﻿namespace VeraDemoNet.Models
+﻿namespace Verademo.Models
 {
     public class ToolViewModel
     {

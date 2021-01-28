@@ -1,7 +1,7 @@
 ﻿using System.Data.Common;
 using System.Reflection;
 
-namespace VeraDemoNet.Commands
+namespace Verademo.Commands
 {
     public class BlabberCommandBase
     {
@@ -9,7 +9,7 @@ namespace VeraDemoNet.Commands
         protected DbConnection connect;
         public BlabberCommandBase()
         {
-            logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);    
+            logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         }
     }
 }

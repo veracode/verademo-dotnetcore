@@ -9,25 +9,27 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Web;
-using System.Web.Hosting;
-using System.Web.Mvc;
 using Newtonsoft.Json;
-using VeraDemoNet.DataAccess;
-using VeraDemoNet.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using Verademo.Models;
+using Verademo.Data;
 
-namespace VeraDemoNet.Controllers  
-{  
+namespace Verademo.Controllers
+{
     // https://www.c-sharpcorner.com/article/custom-authentication-with-asp-net-mvc/
     public class AccountController : AuthControllerBase
     {
         protected readonly log4net.ILog logger;
-
+        private readonly IWebHostEnvironment _environment;
         private const string COOKIE_NAME = "UserDetails";
 
-        public AccountController()
+        public AccountController(IWebHostEnvironment environment)
         {
-            logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);    
+            logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+            _environment = environment;
         }
 
         [HttpGet, ActionName("Login")]
@@ -43,17 +45,17 @@ namespace VeraDemoNet.Controllers
 
             var userDetailsCookie = Request.Cookies[COOKIE_NAME];
 
-            if (userDetailsCookie == null || userDetailsCookie.Value.Length == 0)
+            if (userDetailsCookie == null || userDetailsCookie.Length == 0)
             {
                 logger.Info("No user cookie");
-                Session["username"] = "";
+                HttpContext.Session.SetString("username", "");
 
                 ViewBag.ReturnUrl = ReturnUrl;
                 return View();
             }
 
             logger.Info("User details were remembered");
-            var unencodedUserDetails = Convert.FromBase64String(userDetailsCookie.Value);
+            var unencodedUserDetails = Convert.FromBase64String(userDetailsCookie);
 
             CustomSerializeModel deserializedUser;
 
@@ -71,7 +73,7 @@ namespace VeraDemoNet.Controllers
                 logger.Info("User details were retrieved for user: " + deserializedUser.UserName);
             }
 
-            Session["username"] = deserializedUser.UserName;
+            HttpContext.Session.SetString("username", deserializedUser.UserName);
 
             //if (Url.IsLocalUrl(ReturnUrl))  
             if (string.IsNullOrEmpty(ReturnUrl))
@@ -93,11 +95,12 @@ namespace VeraDemoNet.Controllers
                 {
                     var userDetails = LoginUser(loginViewModel.UserName, loginViewModel.Password);
 
-                    using (EventLog eventLog = new EventLog("Application"))
-                    {
-                        eventLog.Source = "Application";
-                        eventLog.WriteEntry("Entering PostLogin with target " + ReturnUrl + " and username " + loginViewModel.UserName, EventLogEntryType.Information, 101, 1);
-                    }
+                    // EventLog access is not supported on this platform.
+                    // using (EventLog eventLog = new EventLog("Application"))
+                    // {
+                    //     eventLog.Source = "Application";
+                    //     eventLog.WriteEntry("Entering PostLogin with target " + ReturnUrl + " and username " + loginViewModel.UserName, EventLogEntryType.Information, 101, 1);
+                    // }
 
                     if (userDetails == null)
                     {
@@ -118,12 +121,10 @@ namespace VeraDemoNet.Controllers
                         {
                             IFormatter formatter = new BinaryFormatter();
                             formatter.Serialize(userModelStream, userModel);
-                            var faCookie =
-                                new HttpCookie(COOKIE_NAME, Convert.ToBase64String(userModelStream.GetBuffer()))
-                                {
-                                    Expires = DateTime.Now.AddDays(30)
-                                };
-                            Response.Cookies.Add(faCookie);
+                            
+                            Response.Cookies.Append(COOKIE_NAME, Convert.ToBase64String(userModelStream.GetBuffer()), new CookieOptions {
+                                Expires = DateTime.Now.AddDays(30)
+                            });
                         }
                     }
 
@@ -149,12 +150,9 @@ namespace VeraDemoNet.Controllers
         [HttpGet, ActionName("Logout")]
         public ActionResult GetLogOut()
         {
-            var cookie = new HttpCookie("UserDetails", "")
-            {
+            Response.Cookies.Append("UserDetails", "", new CookieOptions {
                 Expires = DateTime.Now.AddYears(-1)
-            };
-
-            Response.Cookies.Add(cookie);
+            });
 
             LogoutUser();
             
@@ -168,14 +166,14 @@ namespace VeraDemoNet.Controllers
 
             if (IsUserLoggedIn() == false)
             {
-                return RedirectToLogin(HttpContext.Request.RawUrl);
+                return RedirectToLogin(Request.QueryString.Value);
             }
 
             var viewModel = new ProfileViewModel();
 
             var username = GetLoggedInUsername();
 
-            using (var dbContext = new BlabberDB())
+            using (var dbContext = new ApplicationDbContext())
             {
                 var connection = dbContext.Database.Connection;
                 connection.Open();
@@ -188,19 +186,19 @@ namespace VeraDemoNet.Controllers
         }
 
         [HttpPost, ActionName("Profile")]
-        public ActionResult PostProfile(string realName, string blabName, string userName, HttpPostedFileBase file)
+        public ActionResult PostProfile(string realName, string blabName, string userName, IFormFile file)
         {
             logger.Info("Entering PostProfile");
 
             if (IsUserLoggedIn() == false)
             {
-                return RedirectToLogin(HttpContext.Request.RawUrl);
+                return RedirectToLogin(Request.QueryString.Value);
             }
 
             var oldUsername = GetLoggedInUsername();
-            var imageDir = HostingEnvironment.MapPath("~/Images/");
+            var imageDir = Path.Combine(_environment.ContentRootPath, "Images");
 
-            using (var dbContext = new BlabberDB())
+            using (var dbContext = new ApplicationDbContext())
             {
                 var connection = dbContext.Database.Connection;
                 connection.Open();
@@ -216,10 +214,8 @@ namespace VeraDemoNet.Controllers
                 if (result == 0)
                 {
                     Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    return new JsonResult
-                    {
-                        Data = JsonConvert.DeserializeObject("{\"message\": \"<script>alert('An error occurred, please try again.');</script>\"}")
-                    };
+                    return new JsonResult(JsonConvert.DeserializeObject(
+                        "{\"message\": \"<script>alert('An error occurred, please try again.');</script>\"}"));
                 }
             }
 
@@ -228,28 +224,22 @@ namespace VeraDemoNet.Controllers
                 if (UsernameExists(userName))
                 {
                     Response.StatusCode = (int) HttpStatusCode.Conflict;
-                    return new JsonResult
-                    {
-                        Data = JsonConvert.DeserializeObject(
-                            "{\"message\": \"<script>alert('That username already exists. Please try another.');</script>\"}")
-                    };
+                    return new JsonResult(JsonConvert.DeserializeObject(
+                        "{\"message\": \"<script>alert('That username already exists. Please try another.');</script>\"}"));
                 }
 
                 if (!UpdateUsername(oldUsername, userName))
                 {
                     Response.StatusCode = (int) HttpStatusCode.InternalServerError;
-                    return new JsonResult
-                    {
-                        Data = JsonConvert.DeserializeObject(
-                            "{\"message\": \"<script>alert('An error occurred, please try again.');</script>\"}")
-                    };
+                    return new JsonResult(JsonConvert.DeserializeObject(
+                            "{\"message\": \"<script>alert('An error occurred, please try again.');</script>\"}"));
                 }
 
-                Session["username"] = userName;
+                HttpContext.Session.SetString("username", userName);
             }
 
             // Update user profile image
-            if (file != null &&  file.ContentLength > 0) 
+            if (file != null &&  file.Length > 0) 
             {
                 // Get old image name, if any, to delete
                 var oldImage = imageDir + userName + ".png";
@@ -265,7 +255,8 @@ namespace VeraDemoNet.Controllers
 
                 logger.Info("Saving new profile image: " + newFilename);
 
-                file.SaveAs(newFilename);
+                //@AF:TODO
+                //file.SaveAs(newFilename);
             }
 
             Response.StatusCode = (int)HttpStatusCode.OK;
@@ -287,7 +278,7 @@ namespace VeraDemoNet.Controllers
         public ActionResult GetPasswordHint(string userName)
         {
             logger.Info("Entering password-hint with username: " + userName);
-		
+
             if (string.IsNullOrEmpty(userName))
             {
                 return Content("No username provided, please type in your username first");
@@ -295,7 +286,7 @@ namespace VeraDemoNet.Controllers
 
             try
             {
-                using (var dbContext = new BlabberDB())
+                using (var dbContext = new ApplicationDbContext())
                 {
                     var match = dbContext.Users.FirstOrDefault(x => x.UserName == userName);
                     if (match == null)
@@ -334,7 +325,7 @@ namespace VeraDemoNet.Controllers
                 "UPDATE users_history SET blabber=@newusername WHERE blabber=@oldusername"
             };
 
-            using (var dbContext = new BlabberDB())
+            using (var dbContext = new ApplicationDbContext())
             {
                 var connection = dbContext.Database.Connection;
                 connection.Open();
@@ -352,7 +343,7 @@ namespace VeraDemoNet.Controllers
                 }
             }
 
-            var imageDir = HostingEnvironment.MapPath("~/Images/");
+            var imageDir = Path.Combine(_environment.ContentRootPath, "Images");
             var oldFilename = Path.Combine(imageDir, oldUsername) + ".png";
             var newFilename = Path.Combine(imageDir, newUsername) + ".png";
 
@@ -369,7 +360,7 @@ namespace VeraDemoNet.Controllers
             username = username.ToLower();
 
             // Check is the username already exists
-            using (var dbContext = new BlabberDB())
+            using (var dbContext = new ApplicationDbContext())
             {
                 var connection = dbContext.Database.Connection;
                 connection.Open();
@@ -412,17 +403,17 @@ namespace VeraDemoNet.Controllers
 
 	        if (IsUserLoggedIn() == false)
 	        {
-	            return RedirectToLogin(HttpContext.Request.RawUrl);
+	            return RedirectToLogin(Request.QueryString.Value);
 	        }
 
-            var imagePath = Path.Combine(HostingEnvironment.MapPath("~/Images/"), image); 
+            var imagePath = Path.Combine(_environment.ContentRootPath, "Images", image);
 
-		    logger.Info("Fetching profile image: " + imagePath);
+            logger.Info("Fetching profile image: " + imagePath);
 
 	        return File(imagePath, System.Net.Mime.MediaTypeNames.Application.Octet);
         }
 
-        [HttpGet, ActionName("register")]
+        [HttpGet, ActionName("Register")]
         public ActionResult GetRegister()
         {
             logger.Info("Entering GetRegister");
@@ -430,16 +421,16 @@ namespace VeraDemoNet.Controllers
             return View(new RegisterViewModel());
         }
         
-        [HttpPost, ActionName("register")]
+        [HttpPost, ActionName("Register")]
         public ActionResult PostRegister (string username)
         {
             logger.Info("PostRegister processRegister");
             var registerViewModel = new RegisterViewModel();
 
-            Session["username"] = username;
+            HttpContext.Session.SetString("username", username);
 
             var sql = "SELECT count(*) FROM users WHERE username = @username";
-            using (var dbContext = new BlabberDB())
+            using (var dbContext = new ApplicationDbContext())
             {
                 var connection = dbContext.Database.Connection;
                 connection.Open();
@@ -463,7 +454,7 @@ namespace VeraDemoNet.Controllers
 
         private string GetProfileImageNameFromUsername(string viewModelUserName)
         {
-            var imagePath = HostingEnvironment.MapPath("~/Images/");
+            var imagePath = Path.Combine(_environment.ContentRootPath, "Images");
             var image =  Directory.EnumerateFiles(imagePath).FirstOrDefault(f => Path.GetFileNameWithoutExtension(f) == viewModelUserName);
 
             var filename = image == null ? "default_profile.png" : Path.GetFileName(image);
@@ -536,7 +527,7 @@ namespace VeraDemoNet.Controllers
         }
 
         [HttpPost, ActionName("RegisterFinish")]
-        public ActionResult PostRegisterFinish(User user, string cpassword)
+        public ActionResult PostRegisterFinish(Verademo.Models.User user, string cpassword)
         {
             if (user.Password != cpassword)
             {
@@ -554,13 +545,13 @@ namespace VeraDemoNet.Controllers
             user.Password = Md5Hash(user.Password);
             user.CreatedAt = DateTime.Now;
             
-            using (var dbContext = new BlabberDB())
+            using (var dbContext = new ApplicationDbContext())
             {
                 dbContext.Users.Add(user);
                 dbContext.SaveChanges();
             }
 
-            var imageDir = HostingEnvironment.MapPath("~/Images/");
+            var imageDir = Path.Combine(_environment.ContentRootPath, "Images");
             try
             {
                 System.IO.File.Copy(Path.Combine(imageDir, "default_profile.png"), Path.Combine(imageDir, user.UserName) + ".png");

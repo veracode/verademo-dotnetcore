@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Web.Hosting;
-using System.Web.Mvc;
-using VeraDemoNet.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Verademo.Models;
 
-namespace VeraDemoNet.Controllers
+namespace Verademo.Controllers
 {
     public class ToolsController : AuthControllerBase
     {
         protected readonly log4net.ILog logger;
+        private readonly IWebHostEnvironment _environment;
 
-        public ToolsController()
+        public ToolsController(IWebHostEnvironment environment)
         {
-            logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);    
+            logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+            _environment = environment;
         }
 
         [HttpGet, ActionName("Tools")]
@@ -22,7 +25,7 @@ namespace VeraDemoNet.Controllers
         {
             if (IsUserLoggedIn() == false)
             {
-                return RedirectToLogin(HttpContext.Request.RawUrl);
+                return RedirectToLogin(Request.QueryString.Value);
             }
 
             return View(new ToolViewModel());
@@ -33,7 +36,7 @@ namespace VeraDemoNet.Controllers
         {
             if (IsUserLoggedIn() == false)
             {
-                return RedirectToLogin(HttpContext.Request.RawUrl);
+                return RedirectToLogin(Request.QueryString.Value);
             }
 
             var viewModel = new ToolViewModel();
@@ -90,7 +93,8 @@ namespace VeraDemoNet.Controllers
             {
                 // START BAD CODE
                 var fileName = "cmd.exe";
-                var arguments = "/c " + HostingEnvironment.MapPath("~/Resources/bin/fortune-go.exe") + " " + HostingEnvironment.MapPath("~/Resources/bin/" + fortuneFile);
+                ;
+                var arguments = "/c " + Path.Combine(_environment.ContentRootPath, "Resources/bin/fortune-go.exe") + " " + Path.Combine(_environment.ContentRootPath, "Resources/bin/bin/" + fortuneFile);
                 // END BAD CODE
 
                 var proc = CreateStdOutProcess(fileName, arguments);

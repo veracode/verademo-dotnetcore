@@ -4,12 +4,12 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Reflection;
 using System.Text;
-using System.Web.Mvc;
-using VeraDemoNet.Commands;
-using VeraDemoNet.DataAccess;
-using VeraDemoNet.Models;
+using Microsoft.AspNetCore.Mvc;
+using Verademo.Commands;
+using Verademo.Data;
+using Verademo.Models;
 
-namespace VeraDemoNet.Controllers
+namespace Verademo.Controllers
 {
     public class BlabController : AuthControllerBase
     {
@@ -73,7 +73,7 @@ namespace VeraDemoNet.Controllers
         {
             if (IsUserLoggedIn() == false)
             {
-                return RedirectToLogin(HttpContext.Request.RawUrl);
+                return RedirectToLogin(Request.QueryString.Value);
             }
 
             return View("SearchBlabs", new SearchBlabsViewModel());
@@ -84,11 +84,11 @@ namespace VeraDemoNet.Controllers
         {
             if (IsUserLoggedIn() == false)
             {
-                return RedirectToLogin(HttpContext.Request.RawUrl);
+                return RedirectToLogin(Request.QueryString.Value);
             }
 
             var searchBlabslist = new List<BlabSearchResultViewModel>();
-            using (var dbContext = new BlabberDB())
+            using (var dbContext = new ApplicationDbContext())
             {
                 dbContext.Database.Connection.Open();
                 var searchBlabs = dbContext.Database.Connection.CreateCommand();
@@ -123,14 +123,14 @@ namespace VeraDemoNet.Controllers
         {
             if (IsUserLoggedIn() == false)
             {
-                return RedirectToLogin(HttpContext.Request.RawUrl);
+                return RedirectToLogin(Request.QueryString.Value);
             }
 
             var username = GetLoggedInUsername();
 
             // Find the Blabs that this user listens to
             var feedBlabs = new List<Blab>();
-            using (var dbContext = new BlabberDB())
+            using (var dbContext = new ApplicationDbContext())
             { 
                 dbContext.Database.Connection.Open();
                 var listeningBlabs = dbContext.Database.Connection.CreateCommand();
@@ -161,7 +161,7 @@ namespace VeraDemoNet.Controllers
 
             // Find Blabs by this user
             var myBlabs = new List<Blab>();
-            using (var dbContext = new BlabberDB())
+            using (var dbContext = new ApplicationDbContext())
             {
                 dbContext.Database.Connection.Open();
                 var listeningBlabs = dbContext.Database.Connection.CreateCommand();
@@ -197,12 +197,12 @@ namespace VeraDemoNet.Controllers
         {
             if (IsUserLoggedIn() == false)
             {
-                return RedirectToLogin(HttpContext.Request.RawUrl);
+                return RedirectToLogin(Request.QueryString.Value);
             }
 
             var username = GetLoggedInUsername();
             
-            using (var dbContext = new BlabberDB())
+            using (var dbContext = new ApplicationDbContext())
             {
                 dbContext.Database.Connection.Open();
                 dbContext.Database.ExecuteSqlCommand(sqlAddBlab, 
@@ -219,7 +219,7 @@ namespace VeraDemoNet.Controllers
         {
             if (IsUserLoggedIn() == false)
             {
-                return RedirectToLogin(HttpContext.Request.RawUrl);
+                return RedirectToLogin(Request.QueryString.Value);
             }
 
             var blabViewModel = CreateBlabViewModel(blabId);
@@ -231,15 +231,14 @@ namespace VeraDemoNet.Controllers
         {
             if (IsUserLoggedIn() == false)
             {
-                return RedirectToLogin(HttpContext.Request.RawUrl);
+                return RedirectToLogin(Request.QueryString.Value);
             }
 
             if (string.IsNullOrWhiteSpace(sort)) 
             {
                 sort = "blab_name ASC";
             }
-            var username = Session["username"] as string;
-            
+            var username = GetLoggedInUsername();
             var viewModel = PopulateBlabbersViewModel(sort, username);
 
             return View(viewModel);
@@ -252,7 +251,7 @@ namespace VeraDemoNet.Controllers
 
             try
             {
-                using (var dbContext = new BlabberDB())
+                using (var dbContext = new ApplicationDbContext())
                 {
                     dbContext.Database.Connection.Open();
                     var blabbers = dbContext.Database.Connection.CreateCommand();
@@ -291,18 +290,18 @@ namespace VeraDemoNet.Controllers
         {
             if (IsUserLoggedIn() == false)
             {
-                return RedirectToLogin(HttpContext.Request.RawUrl);
+                return RedirectToLogin(Request.QueryString.Value);
             }
 
             var username = GetLoggedInUsername();
 
             try
             {
-                using (var dbContext = new BlabberDB())
+                using (var dbContext = new ApplicationDbContext())
                 {
                     dbContext.Database.Connection.Open();
 
-                    var commandType = Type.GetType("VeraDemoNet.Commands." + UpperCaseFirst(command) + "Command");
+                    var commandType = Type.GetType("Verademo.Commands." + UpperCaseFirst(command) + "Command");
 
                     /* START BAD CODE */
                     var cmdObj = (IBlabberCommand) Activator.CreateInstance(commandType, dbContext.Database.Connection, username);
@@ -326,14 +325,14 @@ namespace VeraDemoNet.Controllers
         {
             if (IsUserLoggedIn() == false)
             {
-                return RedirectToLogin(HttpContext.Request.RawUrl);
+                return RedirectToLogin(Request.QueryString.Value);
             }
 
             var username = GetLoggedInUsername();
 
             var error = "";
 
-            using (var dbContext = new BlabberDB())
+            using (var dbContext = new ApplicationDbContext())
             {
                 dbContext.Database.Connection.Open();
                 var result= dbContext.Database.ExecuteSqlCommand(sqlAddComment, 
@@ -372,7 +371,7 @@ namespace VeraDemoNet.Controllers
             // Get the Database Connection
             var returnTemplate = new StringBuilder();
 
-            using (var dbContext = new BlabberDB())
+            using (var dbContext = new ApplicationDbContext())
             { 
                 dbContext.Database.Connection.Open();
                 var listeningBlabs = dbContext.Database.Connection.CreateCommand();
@@ -401,7 +400,7 @@ namespace VeraDemoNet.Controllers
         {
             var blabViewModel = new BlabViewModel {BlabId = blabId};
 
-            using (var dbContext = new BlabberDB())
+            using (var dbContext = new ApplicationDbContext())
             {
                 dbContext.Database.Connection.Open();
                 var blabDetails = dbContext.Database.Connection.CreateCommand();

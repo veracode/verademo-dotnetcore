@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VeraDemoNet.Models
+namespace Verademo.Models
 {
     [Serializable]
     public class CustomSerializeModel

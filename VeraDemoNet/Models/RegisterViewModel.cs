@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace VeraDemoNet.Models
+namespace Verademo.Models
 {
     public class RegisterViewModel
     {

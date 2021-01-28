@@ -1,7 +1,7 @@
 ﻿using System.Data.Common;
 using System.Data.SqlClient;
 
-namespace VeraDemoNet.Commands
+namespace Verademo.Commands
 {
     public class ListenCommand : BlabberCommandBase, IBlabberCommand
     {
@@ -43,7 +43,6 @@ namespace VeraDemoNet.Commands
                 }
             }
 
-            
             /* START BAD CODE */
             var listeningEvent = username + " started listening to " + blabberUsername + "(" + blabberName + ")";
             var eventQuery = "INSERT INTO users_history (blabber, event) VALUES ('" + username + "', '" + listeningEvent + "')";

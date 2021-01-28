@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Data.Common;
 
-namespace VeraDemoNet.Commands
+namespace Verademo.Commands
 {
     public class RemoveAccountCommand : BlabberCommandBase,IBlabberCommand
     {

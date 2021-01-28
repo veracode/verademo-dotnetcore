@@ -1,12 +1,12 @@
-﻿using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace VeraDemoNet.Controllers
+namespace Verademo.Controllers
 {
     public class ErrorController : Controller
     {
-        public ActionResult AccessDenied()  
+        public ActionResult AccessDenied()
         {  
-            return View();  
-        }  
+            return View();
+        }
     }
 }

@@ -4,51 +4,54 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Web.Hosting;
-using System.Web.Mvc;
-using VeraDemoNet.DataAccess;
+using Microsoft.AspNetCore.Mvc;
+using Verademo.Models;
+using Verademo.Data;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
-namespace VeraDemoNet.Controllers
+namespace Verademo.Controllers
 {
     public class ResetController : AuthControllerBase
     {
         protected readonly log4net.ILog logger;
-
+        private readonly IWebHostEnvironment _environment;
         private static readonly User[] _veraUsers =
         {
-            DataAccess.User.Create("admin", "admin", "Thats Mr Administrator to you.", true),
-            DataAccess.User.Create("john", "John", "John Smith"),
-            DataAccess.User.Create("paul", "Paul", "Paul Farrington"),
-            DataAccess.User.Create("chrisc", "Chris", "Chris Campbell"),
-            DataAccess.User.Create("laurie", "Laurie", "Laurie Mercer"),
-            DataAccess.User.Create("nabil", "Nabil", "Nabil Bousselham"),
-            DataAccess.User.Create("julian", "Julian", "Julian Totzek-Hallhuber"),
-            DataAccess.User.Create("joash", "Joash", "Joash Herbrink"),
-            DataAccess.User.Create("andrzej", "Andrzej", "Andrzej Szaryk"),
-            DataAccess.User.Create("april", "April", "April Sauer"),
-            DataAccess.User.Create("armando", "Armando", "Armando Bioc"),
-            DataAccess.User.Create("ben", "Ben", "Ben Stoll"),
-            DataAccess.User.Create("brian", "Brian", "Brian Pitta"),
-            DataAccess.User.Create("caitlin", "Caitlin", "Caitlin Johanson"),
-            DataAccess.User.Create("christraut", "Chris Trautwein", "Chris Trautwein"),
-            DataAccess.User.Create("christyson", "Chris Tyson", "Chris Tyson"),
-            DataAccess.User.Create("clint", "Clint", "Clint Pollock"),
-            DataAccess.User.Create("cody", "Cody", "Cody Bertram"),
-            DataAccess.User.Create("derek", "Derek", "Derek Chowaniec"),
-            DataAccess.User.Create("glenn", "Glenn", "Glenn Whittemore"),
-            DataAccess.User.Create("grant", "Grant", "Grant Robinson"),
-            DataAccess.User.Create("gregory", "Gregory", "Gregory Wolford"),
-            DataAccess.User.Create("jacob", "Jacob", "Jacob Martel"),
-            DataAccess.User.Create("jeremy", "Jeremy", "Jeremy Anderson"),
-            DataAccess.User.Create("johnny", "Johnny", "Johnny Wong"),
-            DataAccess.User.Create("kevin", "Kevin", "Kevin Rise"),
-            DataAccess.User.Create("scottrum", "Scott Rumrill", "Scott Rumrill"),
-            DataAccess.User.Create("scottsim", "Scott Simpson", "Scott Simpson")
+            Models.User.Create("admin", "admin", "Thats Mr Administrator to you.", true),
+            Models.User.Create("john", "John", "John Smith"),
+            Models.User.Create("paul", "Paul", "Paul Farrington"),
+            Models.User.Create("chrisc", "Chris", "Chris Campbell"),
+            Models.User.Create("laurie", "Laurie", "Laurie Mercer"),
+            Models.User.Create("nabil", "Nabil", "Nabil Bousselham"),
+            Models.User.Create("julian", "Julian", "Julian Totzek-Hallhuber"),
+            Models.User.Create("joash", "Joash", "Joash Herbrink"),
+            Models.User.Create("andrzej", "Andrzej", "Andrzej Szaryk"),
+            Models.User.Create("april", "April", "April Sauer"),
+            Models.User.Create("armando", "Armando", "Armando Bioc"),
+            Models.User.Create("ben", "Ben", "Ben Stoll"),
+            Models.User.Create("brian", "Brian", "Brian Pitta"),
+            Models.User.Create("caitlin", "Caitlin", "Caitlin Johanson"),
+            Models.User.Create("christraut", "Chris Trautwein", "Chris Trautwein"),
+            Models.User.Create("christyson", "Chris Tyson", "Chris Tyson"),
+            Models.User.Create("clint", "Clint", "Clint Pollock"),
+            Models.User.Create("cody", "Cody", "Cody Bertram"),
+            Models.User.Create("derek", "Derek", "Derek Chowaniec"),
+            Models.User.Create("glenn", "Glenn", "Glenn Whittemore"),
+            Models.User.Create("grant", "Grant", "Grant Robinson"),
+            Models.User.Create("gregory", "Gregory", "Gregory Wolford"),
+            Models.User.Create("jacob", "Jacob", "Jacob Martel"),
+            Models.User.Create("jeremy", "Jeremy", "Jeremy Anderson"),
+            Models.User.Create("johnny", "Johnny", "Johnny Wong"),
+            Models.User.Create("kevin", "Kevin", "Kevin Rise"),
+            Models.User.Create("scottrum", "Scott Rumrill", "Scott Rumrill"),
+            Models.User.Create("scottsim", "Scott Simpson", "Scott Simpson")
         };
 
-        public ResetController()
+        public ResetController(IWebHostEnvironment environment)
         {
             logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+            _environment = environment;
         }
 
         [HttpGet]
@@ -78,7 +81,7 @@ namespace VeraDemoNet.Controllers
             {
                 logger.Info("Getting Database connection");
 
-                using (var dbContext = new BlabberDB())
+                using (var dbContext = new ApplicationDbContext())
                 {
                     var connection = dbContext.Database.Connection;
                     connection.Open();
@@ -103,7 +106,7 @@ namespace VeraDemoNet.Controllers
 
         private void RecreateDatabaseSchema(DbConnection connect)
         {
-            var scriptPath = HostingEnvironment.MapPath("~/Resources/scripts/blab_schema.sql");
+            var scriptPath = Path.Combine(_environment.ContentRootPath, "Resources/scripts/blab_schema.sql");
 
             var script = System.IO.File.ReadAllText(scriptPath);
 
@@ -161,7 +164,7 @@ namespace VeraDemoNet.Controllers
 
         }
 
-        private void AddUserData(BlabberDB context)
+        private void AddUserData(ApplicationDbContext context)
         {
             logger.Info("Preparing the Statement for adding users");
 
@@ -179,7 +182,7 @@ namespace VeraDemoNet.Controllers
 
             var rand = new Random();
 
-            var scriptPath = HostingEnvironment.MapPath("~/Resources/scripts/blabs.txt");
+            var scriptPath = Path.Combine(_environment.ContentRootPath, "Resources/scripts/blabs.txt");
             var blabsContent = System.IO.File.ReadAllLines(scriptPath);
 
             // Add the blabs
@@ -221,7 +224,8 @@ namespace VeraDemoNet.Controllers
             logger.Info("Reading comments from file");
             
             var rand = new Random();
-            var scriptPath = HostingEnvironment.MapPath("~/Resources/scripts/comments.txt");
+            
+            var scriptPath = Path.Combine(_environment.ContentRootPath, "Resources/scripts/comments.txt");
             var commentsContent = System.IO.File.ReadAllLines(scriptPath);
 
             // Add the comments

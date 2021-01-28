@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VeraDemoNet.Models
+namespace Verademo.Models
 {
     public class BlabViewModel
     {
