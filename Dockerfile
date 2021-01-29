@@ -30,7 +30,7 @@ WORKDIR /app
 COPY app /app
 
 # Compile
-RUN dotnet publish -c debug -o /app/build /app
+RUN dotnet build
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["-c"]

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Start Sql Server
 /opt/mssql/bin/sqlservr &
