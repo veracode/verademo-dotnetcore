@@ -29,6 +29,8 @@ COPY entrypoint.sh /
 WORKDIR /app
 COPY app /app
 
+ENV ASPNETCORE_URLS="http://+:8080"
+
 # Compile
 RUN dotnet build
 
