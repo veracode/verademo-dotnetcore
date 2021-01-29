@@ -56,8 +56,8 @@ namespace Verademo.Controllers
             try
             {
                 // START BAD CODE
-                var fileName = "bash -c '";
-                var arguments = "ping -c1 " + host + "'";
+                var fileName = "bash";
+                var arguments = "-c \"ping -c1 " + host + "\"";
                 // END BAD CODE
 
                 var proc = CreateStdOutProcess(fileName, arguments);
@@ -90,8 +90,8 @@ namespace Verademo.Controllers
             try
             {
                 // START BAD CODE
-                var fileName = "bash -c '";
-                var arguments = "/bin/fortune " + fortuneFile + "'";
+                var fileName = "/bin/bash";
+                var arguments = $"-c \"/bin/fortune {fortuneFile}\"";
                 // END BAD CODE
 
                 var proc = CreateStdOutProcess(fileName, arguments);
