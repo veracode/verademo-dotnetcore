@@ -12,12 +12,10 @@ namespace Verademo.Controllers
     public class ToolsController : AuthControllerBase
     {
         protected readonly log4net.ILog logger;
-        private readonly IWebHostEnvironment _environment;
 
-        public ToolsController(IWebHostEnvironment environment)
+        public ToolsController()
         {
             logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-            _environment = environment;
         }
 
         [HttpGet, ActionName("Tools")]

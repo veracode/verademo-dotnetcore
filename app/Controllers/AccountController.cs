@@ -196,7 +196,7 @@ namespace Verademo.Controllers
             }
 
             var oldUsername = GetLoggedInUsername();
-            var imageDir = Path.Combine(_environment.ContentRootPath, "Images");
+            var imageDir = Path.Combine(_environment.WebRootPath, "images");
 
             using (var dbContext = new ApplicationDbContext())
             {
@@ -343,7 +343,7 @@ namespace Verademo.Controllers
                 }
             }
 
-            var imageDir = Path.Combine(_environment.ContentRootPath, "Images");
+            var imageDir = Path.Combine(_environment.WebRootPath, "images");
             var oldFilename = Path.Combine(imageDir, oldUsername) + ".png";
             var newFilename = Path.Combine(imageDir, newUsername) + ".png";
 
@@ -406,7 +406,7 @@ namespace Verademo.Controllers
 	            return RedirectToLogin(Request.QueryString.Value);
 	        }
 
-            var imagePath = Path.Combine(_environment.ContentRootPath, "Images", image);
+            var imagePath = Path.Combine(_environment.WebRootPath, "images", image);
 
             logger.Info("Fetching profile image: " + imagePath);
 
@@ -454,12 +454,12 @@ namespace Verademo.Controllers
 
         private string GetProfileImageNameFromUsername(string viewModelUserName)
         {
-            var imagePath = Path.Combine(_environment.ContentRootPath, "Images");
+            var imagePath = Path.Combine(_environment.WebRootPath, "images");
             var image =  Directory.EnumerateFiles(imagePath).FirstOrDefault(f => Path.GetFileNameWithoutExtension(f) == viewModelUserName);
 
             var filename = image == null ? "default_profile.png" : Path.GetFileName(image);
             
-            return Url.Content("~/Images/" + filename);
+            return Url.Content("~/images/" + filename);
         }
 
         private List<string> RetrieveMyEvents(DbConnection connect, string username)
@@ -551,7 +551,7 @@ namespace Verademo.Controllers
                 dbContext.SaveChanges();
             }
 
-            var imageDir = Path.Combine(_environment.ContentRootPath, "Images");
+            var imageDir = Path.Combine(_environment.WebRootPath, "images");
             try
             {
                 System.IO.File.Copy(Path.Combine(imageDir, "default_profile.png"), Path.Combine(imageDir, user.UserName) + ".png");

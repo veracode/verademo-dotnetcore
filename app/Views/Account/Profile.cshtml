@@ -108,7 +108,7 @@
                                 <li>
                                     <div class="clear">
                                         <div class="commenterImage">
-                                            <img src="@(Url.Content("~/Images/" + heckler.UserName  + ".png"))" />
+                                            <img src="~/images/@(heckler.UserName).png" />
                                         </div>
                                         <div class="commentText">
                                             <p> @(heckler.BlabName)</p>
@@ -184,7 +184,7 @@
                                 function(key, val) {
                                     $('input[name="' + key + '"]').val(val);
                                     if (key === "username") {
-                                        $('#profileImage').attr('src', '@(Url.Content("~/Images/"))' + val + '.png');
+                                        $('#profileImage').attr('src', '@(Url.Content("~/images/"))' + val + '.png');
                                     }
                                 });
                         }

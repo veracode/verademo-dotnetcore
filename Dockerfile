@@ -30,6 +30,7 @@ WORKDIR /app
 COPY app /app
 
 ENV ASPNETCORE_URLS="http://+:8080"
+ENV ASPNETCORE_ENVIRONMENT="Development"
 ENV NUGET_PACKAGES="/usr/share/nuget"
 
 # Compile

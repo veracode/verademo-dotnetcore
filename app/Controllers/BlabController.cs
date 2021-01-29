@@ -359,7 +359,7 @@ namespace Verademo.Controllers
             var username = GetLoggedInUsername();
 
             var template = "<li><div><div class='commenterImage'>" +
-                           "<img src='" + Url.Content("~/Images/") +"{0}.png'>" + 
+                           "<img src='" + Url.Content("~/images/") +"{0}.png'>" + 
                            "</div>" + 
                            "<div class='commentText'>" + 
                            "<p>{1}</p>" +

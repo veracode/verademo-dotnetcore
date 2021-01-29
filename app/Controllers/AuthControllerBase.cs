@@ -41,7 +41,7 @@ namespace Verademo.Controllers
 
         protected void LogoutUser()
         {
-            HttpContext.Session.SetString("username", null);
+            HttpContext.Session.SetString("username", "");
         }
 
         protected bool IsUserLoggedIn()
