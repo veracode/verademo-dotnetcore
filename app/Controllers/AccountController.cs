@@ -95,12 +95,7 @@ namespace Verademo.Controllers
                 {
                     var userDetails = LoginUser(loginViewModel.UserName, loginViewModel.Password);
 
-                    // EventLog access is not supported on this platform.
-                    // using (EventLog eventLog = new EventLog("Application"))
-                    // {
-                    //     eventLog.Source = "Application";
-                    //     eventLog.WriteEntry("Entering PostLogin with target " + ReturnUrl + " and username " + loginViewModel.UserName, EventLogEntryType.Information, 101, 1);
-                    // }
+                    logger.Info("Entering PostLogin with target " + ReturnUrl + " and username " + loginViewModel.UserName);
 
                     if (userDetails == null)
                     {
@@ -562,6 +557,7 @@ namespace Verademo.Controllers
             }
 
 
+            //@AF:TODO in .net
             //EmailUser(userName);
 
             return RedirectToAction("Login", "Account", new LoginView {UserName = user.UserName});
