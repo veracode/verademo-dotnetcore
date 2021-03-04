@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace Verademo
 {
@@ -29,7 +30,17 @@ namespace Verademo
         {
             services.AddControllersWithViews();
             services.AddRazorPages();
-            services.AddSession();
+
+            services.AddSession(options => {
+                options.Cookie.SameSite = Environment.GetEnvironmentVariable("APPLICATION_URL") == null ? SameSiteMode.Lax : SameSiteMode.None;
+                options.Cookie.SecurePolicy = Environment.GetEnvironmentVariable("APPLICATION_URL") == null ? CookieSecurePolicy.None : CookieSecurePolicy.Always;
+            });
+
+            // services.AddAntiforgery(options => 
+            // {
+            //     options.Cookie.SameSite = Environment.GetEnvironmentVariable("APPLICATION_URL") == null ? SameSiteMode.Lax : SameSiteMode.None;
+            //     options.Cookie.SecurePolicy = Environment.GetEnvironmentVariable("APPLICATION_URL") == null ? CookieSecurePolicy.None : CookieSecurePolicy.Always;
+            // });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
