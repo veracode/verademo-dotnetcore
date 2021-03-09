@@ -39,7 +39,8 @@ See the `docs` folder.
 
 To build the container run this:
 ```
-docker build -t verademo-dotnet .
+docker pull mcr.microsoft.com/mssql/server:2017-CU22-ubuntu-16.04
+docker build --no-cache -t verademo-dotnet .
 ```
 
 To run the container for local development run this:

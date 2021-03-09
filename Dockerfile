@@ -5,7 +5,7 @@
 #
 # https://hub.docker.com/_/microsoft-mssql-server
 # This is Ubuntu 16.04.7 LTS
-FROM mcr.microsoft.com/mssql/server:2017-latest-ubuntu AS runtime
+FROM mcr.microsoft.com/mssql/server:2017-CU22-ubuntu-16.04
 
 # Configure Sql Server
 ENV ACCEPT_EULA=Y
@@ -18,7 +18,6 @@ RUN ln -s /opt/mssql-tools/bin/sqlcmd /bin/ && chmod +x /var/opt/mssql/data/conf
 # Also install the fortune-mod fortune game
 # https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu
 RUN apt-get update \
-    && apt-get -y dist-upgrade \
     && apt-get -y install apt-transport-https dotnet-sdk-3.1 fortune-mod iputils-ping \
     && ln -s /usr/games/fortune /bin/ \
     && rm -rf /var/lib/apt/lists/*
