@@ -52,6 +52,8 @@ namespace Verademo.Controllers
                 return "";
             }
 
+            logger.Info("Pinging: " + host);
+
             var output = new StringBuilder();
             try
             {
