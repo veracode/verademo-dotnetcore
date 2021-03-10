@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,11 @@ namespace Verademo.Controllers
 
                 if (found.Count != 0)
                 {
+                    // Update last login timestamp
+                    string userNameFromDB = found[0].UserName;
+                    dbContext.Users.Where(u => u.UserName == userNameFromDB).First().LastLogin = DateTime.Now;
+                    dbContext.SaveChanges();
+
                     HttpContext.Session.SetString("username", userName);
                     return found[0];
                 }

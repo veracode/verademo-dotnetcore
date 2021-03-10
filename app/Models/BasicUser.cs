@@ -9,14 +9,13 @@
 
         public BasicUser()
         {
-                
         }
 
         public BasicUser(string userName, string blabName, string realName)
         {
             UserName = userName;
             BlabName = blabName;
-            RealName = realName;  
-        }  
+            RealName = realName;
+        }
     }
 }
