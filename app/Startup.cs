@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Verademo
 {
@@ -32,20 +33,32 @@ namespace Verademo
             services.AddRazorPages();
 
             services.AddSession(options => {
-                options.Cookie.SameSite = Environment.GetEnvironmentVariable("APPLICATION_URL") == null ? SameSiteMode.Lax : SameSiteMode.None;
-                options.Cookie.SecurePolicy = Environment.GetEnvironmentVariable("APPLICATION_URL") == null ? CookieSecurePolicy.None : CookieSecurePolicy.Always;
+                options.Cookie.HttpOnly = false;
+
+                if (Environment.GetEnvironmentVariable("CONNECTION_FROM_HTTPS") == "1") {
+                    options.Cookie.SameSite = SameSiteMode.None;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                }
             });
 
-            // services.AddAntiforgery(options => 
-            // {
-            //     options.Cookie.SameSite = Environment.GetEnvironmentVariable("APPLICATION_URL") == null ? SameSiteMode.Lax : SameSiteMode.None;
-            //     options.Cookie.SecurePolicy = Environment.GetEnvironmentVariable("APPLICATION_URL") == null ? CookieSecurePolicy.None : CookieSecurePolicy.Always;
-            // });
+            services.AddAntiforgery(options => {
+                options.Cookie.HttpOnly = false;
+
+                if (Environment.GetEnvironmentVariable("CONNECTION_FROM_HTTPS") == "1") {
+                    options.Cookie.SameSite = SameSiteMode.None;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                }
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddLog4Net();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions {
+                ForwardLimit = 2,
+                ForwardedHeaders = ForwardedHeaders.All
+            });
 
             app.UseDeveloperExceptionPage();
             app.UseDatabaseErrorPage();
