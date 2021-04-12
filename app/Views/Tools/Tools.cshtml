@@ -1,0 +1,30 @@
+﻿@model Verademo.Models.ToolViewModel
+
+@{
+    ViewBag.Title = "Tools";
+}
+
+<div class="page-header">
+    <h4>Tools</h4>
+</div>
+<div></div>
+<form method="post" action="@Url.Action("tools")">
+    <div>
+        <p>Check the availability of a host here by pinging it. Example: 127.0.0.1</p>
+
+        <label for="host">Host:</label>
+        <input type="text" name="host"
+               @{ if (Model.Host != null) { @Html.Raw("value= \"" + Model.Host + "\"")  } } />
+        <input type="submit" value="Check" />
+        <pre>@Model.PingResult</pre>
+    </div>
+    <div>
+        <h5>Show a UNIX fortune from one of the 2 supported dictionaries.</h5>
+        <select name="fortunefile">
+            <option value="literature">literature</option>
+            <option value="riddles">riddles</option>
+        </select>
+        <input type="submit" value="Change" />
+        <pre>@Model.FortuneResult</pre>
+    </div>
+</form>

@@ -1,0 +1,205 @@
+﻿@model Verademo.Models.ProfileViewModel
+
+@{
+    ViewBag.Title = "Profile";
+}
+
+<div class="page-header">
+    <h4>Profile</h4>
+</div>
+<div></div>
+
+@{
+    if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <div class="alert alert-danger" role="alert">
+            @Model.Error
+        </div>
+    }
+}
+
+<div class="row">
+
+    <div class="col-md-6">
+        <div class="detailBox">
+            <div class="titleBox">
+                <label>Your Profile</label>
+                <label>Role: @(Model.IsAdmin ? "Admin" : "User")</label>
+            </div>
+            
+            <div class="actionBox">
+                <form method="post" action="@Url.Action("Profile", "Account") " id="updateprofile" enctype="multipart/form-data">
+                    <input type="hidden" name="returnPath" value="">
+                    <table class="table table-condensed">
+                        <tbody>
+                            <tr>
+                                <td class="commenterImage">
+                                    <img id="profileImage" src="@(Model.Image)" />
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="file" class="form-control" name="file" />
+                                    </div>
+                                    <div>
+                                        <a href="downloadprofileimage?image=@(Model.UserName).png">
+                                            Download Current Image
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Real Name</td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="realName" value="@Model.RealName" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Blab Name</td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="blabName" value="@Model.BlabName" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Username</td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="username" value="@Model.UserName" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    If you update the username, you will be logged out.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <button type="submit" class="btn btn-primary"
+                                            id="login" name="Update" value="Update">
+                                        Update
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="detailBox">
+            <div class="titleBox">
+                <label>Your Hecklers</label>
+            </div>
+            <div class="actionBox">
+                <ul class="commentList">
+                    @{
+                        var hecklers = Model.Hecklers;
+
+                        if (hecklers != null && hecklers.Count > 0)
+                        {
+                            foreach (var heckler in hecklers)
+                            {
+                                <li>
+                                    <div class="clear">
+                                        <div class="commenterImage">
+                                            <img src="~/images/@(heckler.UserName).png" />
+                                        </div>
+                                        <div class="commentText">
+                                            <p> @(heckler.BlabName)</p>
+                                            <span class="date sub-text">member since @(heckler.CreateDateString)</span>
+                                            <br />
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>
+                                <p class="">You have no hecklers</p>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="detailBox">
+            <div class="titleBox">
+                <label>Your History</label>
+            </div>
+            <div class="actionBox">
+                <ul class="commentList">
+                    @{
+                        var events = Model.Events;
+
+                        if (events != null && events.Count > 0)
+                        {
+                            foreach (var ev in events)
+                            {
+                                <li>
+                                    <p class="">@ev</p>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>
+                                <p class="">You haven't done anything yet!</p>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $('#updateprofile').submit(function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                type: e.target.method,
+                url: e.target.action,
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    console.log("Profile updated");
+                    if (data) {
+                        if ('loggedout' in data) {
+                            location.href = "@Url.Action("Login", "Account")";
+                        } else if ('values' in data) {
+                            $.each(data.values,
+                                function(key, val) {
+                                    $('input[name="' + key + '"]').val(val);
+                                    if (key === "username") {
+                                        $('#profileImage').attr('src', '@(Url.Content("~/images/"))' + val + '.png');
+                                    }
+                                });
+                        }
+                        if ('message' in data) {
+                            $('body').append(data.message);
+                        }
+                    }
+                },
+                error: function(err) {
+                    console.log("Form submission error", err);
+                    if (err.responseJSON && 'message' in err.responseJSON) {
+                        $('body').append(err.responseJSON.message);
+                    }
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,46 @@
+﻿@model Verademo.Controllers.ResetViewModel
+
+@{
+    Layout = "../Shared/_LoginLayout.cshtml";
+    ViewBag.Title = "Reset";
+}
+
+<div class="page-header">
+    <h4>Reset Blab Data</h4>
+</div>
+<div></div>
+
+@{
+    if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <div class="alert alert-danger" role="alert">
+            @Model.Error
+        </div>
+    }
+}
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">To reset the Blab Data confirm below</h3>
+            </div>
+            <div class="panel-body">
+                <p>This clears out all data from the database and reinstates a known good data set.</p>
+                <form method="POST">
+                    <input type="hidden" name="returnPath" value="">
+
+                    <hr />
+                    <fieldset>
+                        <input type="checkbox" id="confirm" name="confirm" value="Confirm">
+                        <label for="confirm">REQUIRED - Yes I realise that I will lose all data in my current VeraDemo instance, including users.</label>
+                    </fieldset>
+                    <hr />
+
+                    <button type="submit" class="btn btn-danger" id="login" name="reset" value="reset">Reset</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+﻿@model Verademo.Models.SearchBlabsViewModel
+
+@{
+    ViewBag.Title = "Search Blabs";
+}
+
+<div class="page-header">
+    <h4>Search Blabs</h4>
+</div>
+
+@{
+    if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <div class="alert alert-danger" role="alert">
+            @Model.Error
+        </div>
+    }
+}
+
+<form class="form-inline" role="form" method="POST" action="@Url.Action("SearchBlabs", "Blab")">
+    <div class="form-group">
+        <input class="form-control" type="text" placeholder="Search for a blab" name="searchtext" />
+    </div>
+    <div class="form-group">
+        <button class="btn btn-default">Search</button>
+    </div>
+</form>
+
+<div class="col-md-3"></div>
+
+@{
+    if (Model.Blabs.Count == 0)
+    {
+        <div class="col-md-3">No results</div>
+    }
+    else
+    {
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="detailBox">
+                    <div class="titleBox">
+                        <label>Blabs</label>
+                    </div>
+                    <div class="actionBox">
+                        <table class="blabbers table">
+                            <thead>
+                            <tr>
+                                <th class="blabberName">Blabber</th>
+                                <th class="blab">Blab</th>
+                                <th class="blabPostDate">Post Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @{
+                                var blabs = Model.Blabs;
+                                foreach (var blab in blabs)
+                                {
+                                    <tr>
+                                        <td class="commenterName">
+                                            @blab.Blabber
+                                        </td>
+                                        <td class="comment">
+                                            @blab.Content
+                                        </td>
+                                        <td class="commentPostDate">
+                                            @(blab.BlabDateString)
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+            <div class="col-md-3"></div>
+        </div>
+    }
+}

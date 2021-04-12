@@ -1,0 +1,74 @@
+﻿@using Verademo.Models
+@model Verademo.Models.BlabViewModel
+
+@{
+    ViewBag.Title = "Blab";
+}
+
+<div class="page-header">
+    <h4>@Model.BlabName says...</h4>
+</div>
+<div>
+    <blockquote>
+        <h3>@Model.Content</h3>
+    </blockquote>
+</div>
+
+@{
+    if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <div class="alert alert-danger" role="alert">
+            @Model.Error
+        </div>
+    }
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="detailBox">
+            <div class="titleBox">
+                <label>Comments</label>
+            </div>
+            <div class="actionBox">
+                <div class="blabber">
+                    <form class="form-inline" role="form" method="POST" action="blab">
+                        <div class="form-group">
+                            <input class="form-control" type="text" placeholder="Add a comment now..." name="comment" />
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-default">Add</button>
+                        </div>
+                        <input type="hidden" name="blabid" value="@Model.BlabId">
+                    </form>
+                </div>
+
+                <ul class="commentList">
+                    @{
+                        var comments = Model.Comments;
+
+                        foreach (var comment in comments)
+                        {
+                            <li>
+                                <div>
+                                    <div class="commenterImage">
+                                        <img src="~/images/@(comment.Author.UserName).png" />
+                                    </div>
+                                    <div class="blockquote">
+                                        <p class="">
+                                            @*START BAD CODE*@
+                                            "@Html.Raw(comment.Content)"
+                                            @*END BAD CODE*@
+                                        </p>
+                                        <span class="date sub-text">by @(comment.Author.BlabName) on @comment.TimestampString</span><br>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+    <div class="col-md-3"></div>
+</div>

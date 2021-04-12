@@ -3,58 +3,49 @@
 ## About
 
 Blab-a-Gag is a fairly simple forum type application which allows:
- - users to post a one-liner joke
- - users to follow the jokes of other users or not (listen or ignore)
- - users to comment on other users messages (heckle)
- 
+* Users can post a one-liner joke.
+* Users can follow the jokes of other users or not (listen or ignore).
+* Users can comment on other users messages (heckle).
+
 ### URLs
 
-`/reset` will reset the data in the database with a load of:
- - users
- - jokes
- - heckles
-  
-`/feed` shows the jokes/heckles that are relevant to the current user.
-
-`/blabbers` shows a list of all other users and allows the current user to listen or ignore.
-
-`/profile` allows the current user to modify their profile.
-
-`/login` allows you to log in to your account
-
-`/register` allows you to create a new user account
-
-`/tools` shows a tools page that shows a fortune or lets you ping a host.
-   
-## Configure
-
-Database credentials are held in web.config
-Log4Net information is helped in log4net.config
-
-### Database
-
-A blank database is provided in App_Data\VeraDemoNet.mdf - the application will connect to this by default.
-If you want to change it, the connection string is in web.config as BlabberDB
+* `/feed` shows the jokes/heckles that are relevant to the current user.
+* `/blabbers` shows a list of all other users and allows the current user to listen or ignore.
+* `/profile` allows the current user to modify their profile.
+* `/login` allows you to log in to your account
+* `/register` allows you to create a new user account
+* `/tools` shows a tools page that shows a fortune or lets you ping a host.
  
 ## Run
 
-Visual Studio 2017 is required to build the application. Publishing generates the appropriate files to deploy.
+If you don't already have Docker this is a prerequisite.
 
-Alternatively, run from inside Visual Studio.
+```
+docker run --rm -it -p 127.0.0.1:8080:8080 antfie/verademo-dotnet
+```
 
-Open `/reset` in your browser and follow the instructions to prep the database
-
-Login with your username/password as defined in `ResetController.cs :: _veraUsers
-
-## AWS/Azure Deployment
-
-### Azure
-The deployment from Visual Studio recognises the connection string and will update to point to the Azure SQL Server instance
-
-### AWS
-Install the AWS Toolkit for VS 2017 - https://aws.amazon.com/visualstudio/
-
+Navigate to: http://127.0.0.1:8080.
 
 ## Exploitation Demos
 
-See the `docs` folder
+See the `docs` folder.
+
+## Technologies Used
+
+* ASP.NET Core MVC on .NET Core 3.1
+* Sql Server 2017 Express
+
+## Development
+
+To build the container run this:
+```
+docker pull mcr.microsoft.com/mssql/server:2017-CU22-ubuntu-16.04
+docker build --no-cache -t verademo-dotnet .
+```
+
+To run the container for local development run this:
+```
+docker run --rm -it -p 127.0.0.1:8080:8080 --entrypoint bash -v "$(pwd)/app:/app" verademo-dotnet
+```
+
+You will then need to manually run the two commands within `/entrypoint.sh`. The first starts the DB in the background whereas the second compiles and runs the application. Typically a container shouldn't have multiple services but this was done for convenience.

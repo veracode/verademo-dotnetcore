@@ -1,0 +1,83 @@
+﻿@model Verademo.Models.LoginView
+
+@{
+    Layout = "../Shared/_LoginLayout.cshtml";
+    ViewBag.Title = "Login to Blab";
+}
+
+<div class="page-header">
+    <h3>Login</h3>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Please provide your username and password to login to Blab
+                </h3>
+            </div>
+            @Html.ValidationMessage("CustomError", new { @class = "text-danger" })
+            <div class="panel-body">
+                @using (Html.BeginForm(null, null, new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <table class="table table-condensed">
+                        <tbody>
+                            <tr>
+                                <td>Username</td>
+                                <td>
+                                    <div class="form-group">
+                                        @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                                    </div><a href="javascript:hint();">Hint</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Password</td>
+                                <td>
+                                    <div class="form-group">
+                                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @type = "password" } })
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    @Html.CheckBoxFor(model => model.RememberLogin)
+                                    <label for="RememberLogin">Remember me</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button type="submit" class="btn btn-primary"
+                                            id="login" name="Login" value="Login">
+                                        Login
+                                    </button>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        function hint() {
+
+            function alerter() {
+                window.alert(this.responseText);
+            }
+
+            var oReq = new XMLHttpRequest();
+            oReq.addEventListener("load", alerter);
+            oReq.open("GET", "passwordhint?username=" + document.forms[0].UserName.value);
+            oReq.send();
+        }
+    </script>
+}
