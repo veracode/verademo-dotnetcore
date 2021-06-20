@@ -1,11 +1,11 @@
-﻿using System.Data;
-using System.Data.Common;
+﻿using System.Data.Common;
 
 namespace Verademo.Commands
 {
-    public class RemoveAccountCommand : BlabberCommandBase,IBlabberCommand
+    public class RemoveAccountCommand : BlabberCommandBase, IBlabberCommand
     {
-        public RemoveAccountCommand(DbConnection connect, string username) {
+        public RemoveAccountCommand(DbConnection connect)
+        {
             this.connect = connect;
         }
 
@@ -24,19 +24,19 @@ namespace Verademo.Commands
 
             action.ExecuteNonQuery();
 
-            sqlQuery = "SELECT blab_name FROM users WHERE username = '" + blabberUsername +"'";
+            sqlQuery = "SELECT blab_name FROM users WHERE username = '" + blabberUsername + "'";
             var sqlStatement = connect.CreateCommand();
             sqlStatement.CommandText = sqlQuery;
             logger.Info(sqlQuery);
             var result = sqlStatement.ExecuteScalar();
-		
+
             /* START BAD CODE */
             var removeEvent = "Removed account for blabber " + result;
             sqlQuery = "INSERT INTO users_history (blabber, event) VALUES ('" + blabberUsername + "', '" + removeEvent + "')";
             logger.Info(sqlQuery);
             sqlStatement.CommandText = sqlQuery;
             sqlStatement.ExecuteNonQuery();
-		
+
             sqlQuery = "DELETE FROM users WHERE username = '" + blabberUsername + "'";
             logger.Info(sqlQuery);
             sqlStatement.CommandText = sqlQuery;

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -57,21 +58,11 @@ namespace Verademo.Controllers
             logger.Info("User details were remembered");
             var unencodedUserDetails = Convert.FromBase64String(userDetailsCookie);
 
-            CustomSerializeModel deserializedUser;
+            /* START BAD CODE */
+            var deserializedUser = (CustomSerializeModel)JsonConvert.DeserializeObject<object>(Encoding.UTF8.GetString(unencodedUserDetails), new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+            /* END BAD CODE */
 
-            using (MemoryStream memoryStream = new MemoryStream(unencodedUserDetails))
-            {
-                var binaryFormatter = new BinaryFormatter();
-
-                // set memory stream position to starting point
-                memoryStream.Position = 0;
-
-                // Deserializes a stream into an object graph and return as a object.
-                /* START BAD CODE */
-                deserializedUser = binaryFormatter.Deserialize(memoryStream) as CustomSerializeModel;
-                /* END BAD CODE */
-                logger.Info("User details were retrieved for user: " + deserializedUser.UserName);
-            }
+            logger.Info("User details were retrieved for user: " + deserializedUser.UserName);
 
             HttpContext.Session.SetString("username", deserializedUser.UserName);
 
@@ -112,15 +103,11 @@ namespace Verademo.Controllers
                             RealName = userDetails.RealName
                         };
 
-                        using (var userModelStream = new MemoryStream())
-                        {
-                            IFormatter formatter = new BinaryFormatter();
-                            formatter.Serialize(userModelStream, userModel);
-                            
-                            Response.Cookies.Append(COOKIE_NAME, Convert.ToBase64String(userModelStream.GetBuffer()), new CookieOptions {
-                                Expires = DateTime.Now.AddDays(30)
-                            });
-                        }
+                        var serializedUserModel = JsonConvert.SerializeObject(userModel, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
+                        Response.Cookies.Append(COOKIE_NAME, Convert.ToBase64String(Encoding.UTF8.GetBytes(serializedUserModel)), new CookieOptions {
+                            Expires = DateTime.Now.AddDays(30)
+                        });
                     }
 
                     if (string.IsNullOrEmpty(ReturnUrl))
