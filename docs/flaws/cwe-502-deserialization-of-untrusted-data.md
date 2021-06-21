@@ -22,7 +22,7 @@ We can exploit this like so:
 2. Add a cookie called 'UserDetails' if it isn't there already
 2. Use the developer tools to set the cookie value and paste the following value: eyIkdHlwZSI6IlZlcmFkZW1vLkNvbW1hbmRzLkFkbWluRXhlY3V0ZUNvbW1hbmQsIGFwcCIsIkFjdGlvbiI6Ii1jIFwidG91Y2ggL3RtcC9oYWNrZWRcIiJ9Cg==
 3. Allow the request to go ahead to execute this malicious payload.
-4. run ls /tmp and observe a file named `hacked`.
+4. There will be an error presented but the attack has been successful. Run ls /tmp and observe a file named `hacked`.
 
 Generate the payload
 --------------------
