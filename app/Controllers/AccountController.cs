@@ -123,6 +123,7 @@ namespace Verademo.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError("CustomError", ex.Message);
+                logger.Info(ex.Message);
             }
 
             return View(loginViewModel);
@@ -379,20 +380,20 @@ namespace Verademo.Controllers
         }
         
         [HttpGet, ActionName("DownloadProfileImage")]
-	    public ActionResult DownloadProfileImage(string image)
-	    {
-		    logger.Info("Entering downloadImage");
+        public ActionResult DownloadProfileImage(string image)
+        {
+            logger.Info("Entering downloadImage");
 
-	        if (IsUserLoggedIn() == false)
-	        {
-	            return RedirectToLogin(Request.QueryString.Value);
-	        }
+            if (IsUserLoggedIn() == false)
+            {
+                return RedirectToLogin(Request.QueryString.Value);
+            }
 
             var imagePath = Path.Combine(_environment.WebRootPath, "images", image);
 
             logger.Info("Fetching profile image: " + imagePath);
 
-	        return File(imagePath, System.Net.Mime.MediaTypeNames.Application.Octet);
+            return PhysicalFile(imagePath, System.Net.Mime.MediaTypeNames.Application.Octet);
         }
 
         [HttpGet, ActionName("Register")]
