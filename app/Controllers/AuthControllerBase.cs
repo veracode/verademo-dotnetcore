@@ -77,7 +77,7 @@ namespace Verademo.Controllers
 
             using (MD5 md5 = MD5.Create())
             {
-                var retVal = md5.ComputeHash(Encoding.Unicode.GetBytes(input));
+                var retVal = md5.ComputeHash(Encoding.ASCII.GetBytes(input));
 
                 foreach (var t in retVal)
                 {
