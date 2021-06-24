@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+using System.Data.Common;
 using System.Data.SqlClient;
 
 namespace Verademo.Commands

@@ -1,4 +1,4 @@
-﻿namespace Verademo.Models
+namespace Verademo.Models
 {
     public class BasicUser
     {
