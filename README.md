@@ -39,7 +39,7 @@ See the `docs` folder.
 
 To build the container run this:
 ```
-docker pull mcr.microsoft.com/mssql/server:2017-CU22-ubuntu-16.04
+docker pull mcr.microsoft.com/mssql/server:2017-CU24-ubuntu-16.04
 docker build --no-cache -t verademo-dotnet .
 ```
 

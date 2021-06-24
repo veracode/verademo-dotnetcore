@@ -4,8 +4,8 @@
 # aspnetcore-runtime-3.1 to enable re-compilation within the lab.
 #
 # https://hub.docker.com/_/microsoft-mssql-server
-# This is Ubuntu 16.04.7 LTS
-FROM mcr.microsoft.com/mssql/server:2017-CU22-ubuntu-16.04
+# This is Ubuntu 16.04 LTS
+FROM mcr.microsoft.com/mssql/server:2017-CU24-ubuntu-16.04
 
 # Configure Sql Server
 ENV ACCEPT_EULA=Y
@@ -24,6 +24,7 @@ RUN apt-get update \
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 COPY entrypoint.sh /
+RUN chmod +x /entrypoint.sh
 
 WORKDIR /app
 COPY app /app
