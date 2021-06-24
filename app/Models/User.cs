@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Cryptography;
 using System.Text;
@@ -51,7 +51,7 @@ namespace Verademo.Models
 
             using (MD5 md5 = MD5.Create())
             {
-                var retVal = md5.ComputeHash(Encoding.Unicode.GetBytes(input));
+                var retVal = md5.ComputeHash(Encoding.ASCII.GetBytes(input));
 
                 foreach (var t in retVal)
                 {

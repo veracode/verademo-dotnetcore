@@ -1,4 +1,4 @@
-﻿namespace Verademo.Controllers
+namespace Verademo.Controllers
 {
     public class ResetViewModel
     {

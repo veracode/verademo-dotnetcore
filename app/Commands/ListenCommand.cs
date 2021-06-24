@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+using System.Data.Common;
 using System.Data.SqlClient;
 
 namespace Verademo.Commands
@@ -22,8 +22,8 @@ namespace Verademo.Commands
             {
 
                 action.CommandText = listenerInsertQuery;
-                action.Parameters.Add(new SqlParameter {ParameterName = "@blabber", Value = blabberUsername});
-                action.Parameters.Add(new SqlParameter {ParameterName = "@listener", Value = username});
+                action.Parameters.Add(new SqlParameter { ParameterName = "@blabber", Value = blabberUsername });
+                action.Parameters.Add(new SqlParameter { ParameterName = "@listener", Value = username });
                 action.ExecuteNonQuery();
             }
 

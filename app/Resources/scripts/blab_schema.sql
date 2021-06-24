@@ -1,4 +1,4 @@
-﻿IF OBJECT_ID('dbo.blabs', 'U') IS NOT NULL DROP TABLE [blabs]; 
+IF OBJECT_ID('dbo.blabs', 'U') IS NOT NULL DROP TABLE [blabs]; 
 GO
 IF OBJECT_ID('dbo.comments', 'U') IS NOT NULL DROP TABLE [comments]; 
 GO

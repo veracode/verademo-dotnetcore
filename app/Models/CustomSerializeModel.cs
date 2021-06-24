@@ -1,8 +1,5 @@
-﻿using System;
-
 namespace Verademo.Models
 {
-    [Serializable]
     public class CustomSerializeModel
     {
         public int UserId { get; set; }

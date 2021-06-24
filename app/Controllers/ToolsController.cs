@@ -1,9 +1,7 @@
-﻿using System;
+using System;
 using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using System.Text;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Verademo.Models;
 
@@ -84,7 +82,7 @@ namespace Verademo.Controllers
         {
             var output = new StringBuilder();
 
-            if (string.IsNullOrEmpty(fortuneFile)) 
+            if (string.IsNullOrEmpty(fortuneFile))
             {
                 fortuneFile = "literature";
             }
@@ -98,8 +96,8 @@ namespace Verademo.Controllers
 
                 var proc = CreateStdOutProcess(fileName, arguments);
 
-                proc.ErrorDataReceived += delegate(object sender, DataReceivedEventArgs e) { output.Append(e.Data); };
-                proc.OutputDataReceived += delegate(object sender, DataReceivedEventArgs e) { output.Append(e.Data + "\n"); };
+                proc.ErrorDataReceived += delegate (object sender, DataReceivedEventArgs e) { output.Append(e.Data); };
+                proc.OutputDataReceived += delegate (object sender, DataReceivedEventArgs e) { output.Append(e.Data + "\n"); };
 
                 proc.Start();
                 proc.BeginOutputReadLine();
